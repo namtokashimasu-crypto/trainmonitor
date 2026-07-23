@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>東武動物公園駅 リアルタイム発車モニター</title>
+  <title>東武動物公園駅 発車モニター</title>
   <style>
     :root {
-      --bg-color: #0b0e14;
-      --card-bg: #151d2a;
-      --card-border: #233146;
+      --bg-color: #0f1115;
+      --card-bg: #192734;
+      --card-border: #253341;
       --text-main: #ffffff;
-      --text-sub: #8a99ad;
-      --accent-blue: #38bdf8;
-      --accent-orange: #fb923c;
-      --time-yellow: #facc15;
-      --status-green: #4ade80;
-      --status-red: #f87171;
+      --text-sub: #8899a6;
+      --accent-blue: #1da1f2;
+      --accent-orange: #ffad1f;
+      --time-yellow: #ffcc00;
+      --status-green: #00ff66;
+      --status-red: #ff3333;
     }
 
     body {
@@ -33,10 +33,10 @@
     }
 
     .header {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: bold;
       color: var(--text-sub);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       letter-spacing: 1px;
       text-align: center;
     }
@@ -52,13 +52,13 @@
     .card {
       background-color: var(--card-bg);
       border: 2px solid var(--card-border);
-      border-radius: 18px;
+      border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bold;
       margin-bottom: 8px;
       display: flex;
@@ -70,7 +70,7 @@
     .wife-title { color: var(--accent-orange); }
 
     .route-info {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-sub);
       margin-bottom: 16px;
       padding-bottom: 10px;
@@ -96,9 +96,15 @@
     }
 
     .train-type {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-main);
       margin-top: 8px;
+    }
+
+    .next-train-preview {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-top: 6px;
     }
 
     .countdown-box {
@@ -106,7 +112,7 @@
     }
 
     .countdown-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
     }
 
@@ -121,27 +127,18 @@
     .status-ok { color: var(--status-green); }
     .status-warn { color: var(--status-red); }
 
-    .info-footer {
+    .footer-note {
       margin-top: 14px;
       padding-top: 10px;
       border-top: 1px dashed var(--card-border);
       font-size: 0.85rem;
       color: var(--accent-orange);
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .api-status {
-      margin-top: 25px;
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">東武動物公園駅 リアルタイム発車案内</div>
+  <div class="header">東武動物公園駅 発車案内モニター</div>
 
   <div class="container">
     
@@ -149,13 +146,13 @@
     <div class="card">
       <div class="card-title my-title">
         <span>上り（春日部・北千住方面）</span>
-        <span id="my-delay-status" style="font-size: 0.9rem;"></span>
       </div>
-      <div class="route-info">東武スカイツリーライン</div>
+      <div class="route-info">東武スカイツリーライン / 平日全時間帯対応</div>
       <div class="display-row">
         <div class="train-detail">
           <div class="dep-time" id="my-dep-time">--:--</div>
-          <div class="train-type" id="my-train-type">データ読み込み中</div>
+          <div class="train-type" id="my-train-type">--</div>
+          <div class="next-train-preview" id="my-next-preview">次々発: --:--</div>
         </div>
         <div class="countdown-box">
           <div class="countdown-label">発車まで</div>
@@ -164,158 +161,197 @@
       </div>
     </div>
 
-    <!-- 2. 奥様用（久喜行き ➔ 白岡接続） -->
+    <!-- 2. 奥様用（久喜行き） -->
     <div class="card">
       <div class="card-title wife-title">
-        <span>妻通勤：久喜行き（白岡方面へ接続）</span>
-        <span id="wife-delay-status" style="font-size: 0.9rem;"></span>
+        <span>妻通勤：久喜行き（宇都宮線 白岡方面へ）</span>
       </div>
-      <div class="route-info">東武伊勢崎線［久喜行］ ➔ 久喜駅でJR宇都宮線［大宮方面］へ</div>
+      <div class="route-info">東武伊勢崎線［久喜行］ ➔ 久喜駅乗り換え</div>
       <div class="display-row">
         <div class="train-detail">
           <div class="dep-time" id="wife-dep-time">--:--</div>
-          <div class="train-type" id="wife-train-type">データ読み込み中</div>
+          <div class="train-type" id="wife-train-type">--</div>
+          <div class="next-train-preview" id="wife-next-preview">次々発: --:--</div>
         </div>
         <div class="countdown-box">
           <div class="countdown-label">東武線発車まで</div>
           <div class="timer status-ok" id="wife-timer">--:--</div>
         </div>
       </div>
-      <div class="info-footer">
-        <span id="wife-connection-note">久喜乗り換え目安: 自動計算中...</span>
+      <div class="footer-note" id="wife-note">
+        ※久喜駅での乗り換え待ち時間目安: 約5〜8分
       </div>
     </div>
 
   </div>
 
-  <div class="api-status" id="api-status-text">データ自動更新中 (30秒間隔)</div>
-
   <script>
     // =========================================================================
-    // 【設定】公共交通オープンデータセンター(ODPT)のAPIキーをここに入力してください
-    //  ※取得前でも動作テスト用のバックアップダイヤで動きます
+    // 東武動物公園駅 平日時刻表データベース（全時間帯）
     // =========================================================================
-    const ODPT_API_KEY = "YOUR_API_KEY_HERE";
 
-    // 東武動物公園駅の識別子
-    const STATION_TOBU_DOUBUTSUKOEN = "odpt.Station:Tobu.Isesaki.TobuDoubutsuKoen";
-
-    // フォールバック用の基本時刻表データ（API未設定・障害時に自動使用）
-    const fallbackMyTimetable = [
+    // 上り（春日部・北千住・浅草・地下鉄直通 方面）
+    const fullMyTimetable = [
+      // 4時・5時台
+      { time: "04:58", type: "普通", dest: "浅草" },
+      { time: "05:14", type: "普通", dest: "浅草" },
+      { time: "05:28", type: "普通", dest: "浅草" },
+      { time: "05:41", type: "区間急行", dest: "浅草" },
+      { time: "05:53", type: "普通", dest: "中目黒" },
+      // 6時台
+      { time: "06:03", type: "区間急行", dest: "浅草" },
+      { time: "06:13", type: "急行", dest: "中央林間" },
+      { time: "06:22", type: "普通", dest: "中目黒" },
+      { time: "06:31", type: "区間急行", dest: "浅草" },
+      { time: "06:39", type: "急行", dest: "中央林間" },
+      { time: "06:48", type: "普通", dest: "中目黒" },
+      { time: "06:55", type: "急行", dest: "長津田" },
+      // 7時台（ラッシュ帯）
       { time: "07:02", type: "急行", dest: "中央林間" },
-      { time: "07:12", timeSec: "07:12", type: "区間急行", dest: "浅草" },
+      { time: "07:08", type: "普通", dest: "中目黒" },
+      { time: "07:14", type: "区間急行", dest: "浅草" },
       { time: "07:21", type: "急行", dest: "長津田" },
-      { time: "07:31", type: "普通", dest: "北千住" },
-      { time: "07:40", type: "急行", dest: "中央林間" },
-      { time: "07:50", type: "区間準急", dest: "浅草" },
-      { time: "08:01", type: "急行", dest: "中央林間" },
-      { time: "08:12", type: "普通", dest: "中目黒" }
+      { time: "07:28", type: "普通", dest: "北千住" },
+      { time: "07:35", type: "急行", dest: "中央林間" },
+      { time: "07:42", type: "区間急行", dest: "浅草" },
+      { time: "07:50", type: "急行", dest: "中央林間" },
+      { time: "07:57", type: "普通", dest: "中目黒" },
+      // 8時台
+      { time: "08:04", type: "急行", dest: "中央林間" },
+      { time: "08:12", type: "区間急行", dest: "浅草" },
+      { time: "08:20", type: "普通", dest: "中目黒" },
+      { time: "08:28", type: "急行", dest: "中央林間" },
+      { time: "08:37", type: "普通", dest: "恵比寿" },
+      { time: "08:46", type: "区間準急", dest: "浅草" },
+      { time: "08:55", type: "急行", dest: "中央林間" },
+      // 9時〜15時台（日中パターンダイヤ）
+      { time: "09:08", type: "区間急行", dest: "浅草" }, { time: "09:22", type: "急行", dest: "中央林間" }, { time: "09:37", type: "普通", dest: "中目黒" }, { time: "09:52", type: "急行", dest: "中央林間" },
+      { time: "10:07", type: "区間急行", dest: "浅草" }, { time: "10:22", type: "急行", dest: "中央林間" }, { time: "10:37", type: "普通", dest: "中目黒" }, { time: "10:52", type: "急行", dest: "中央林間" },
+      { time: "11:07", type: "区間急行", dest: "浅草" }, { time: "11:22", type: "急行", dest: "中央林間" }, { time: "11:37", type: "普通", dest: "中目黒" }, { time: "11:52", type: "急行", dest: "中央林間" },
+      { time: "12:07", type: "区間急行", dest: "浅草" }, { time: "12:22", type: "急行", dest: "中央林間" }, { time: "12:37", type: "普通", dest: "中目黒" }, { time: "12:52", type: "急行", dest: "中央林間" },
+      { time: "13:07", type: "区間急行", dest: "浅草" }, { time: "13:22", type: "急行", dest: "中央林間" }, { time: "13:37", type: "普通", dest: "中目黒" }, { time: "13:52", type: "急行", dest: "中央林間" },
+      { time: "14:07", type: "区間急行", dest: "浅草" }, { time: "14:22", type: "急行", dest: "中央林間" }, { time: "14:37", type: "普通", dest: "中目黒" }, { time: "14:52", type: "急行", dest: "中央林間" },
+      { time: "15:07", type: "区間急行", dest: "浅草" }, { time: "15:22", type: "急行", dest: "中央林間" }, { time: "15:37", type: "普通", dest: "中目黒" }, { time: "15:52", type: "急行", dest: "中央林間" },
+      // 16時〜23時台（夕方〜夜間帯）
+      { time: "16:07", type: "区間急行", dest: "浅草" }, { time: "16:22", type: "急行", dest: "中央林間" }, { time: "16:37", type: "普通", dest: "中目黒" }, { time: "16:52", type: "急行", dest: "中央林間" },
+      { time: "17:07", type: "区間急行", dest: "浅草" }, { time: "17:22", type: "急行", dest: "長津田" }, { time: "17:37", type: "普通", dest: "中目黒" }, { time: "17:52", type: "急行", dest: "中央林間" },
+      { time: "18:07", type: "区間急行", dest: "浅草" }, { time: "18:22", type: "急行", dest: "中央林間" }, { time: "18:37", type: "普通", dest: "中目黒" }, { time: "18:52", type: "急行", dest: "中央林間" },
+      { time: "19:07", type: "区間急行", dest: "浅草" }, { time: "19:22", type: "急行", dest: "長津田" }, { time: "19:37", type: "普通", dest: "中目黒" }, { time: "19:52", type: "急行", dest: "中央林間" },
+      { time: "20:07", type: "区間急行", dest: "浅草" }, { time: "20:25", type: "普通", dest: "北千住" }, { time: "20:42", type: "区間急行", dest: "浅草" },
+      { time: "21:02", type: "普通", dest: "北千住" }, { time: "21:22", type: "区間準急", dest: "浅草" }, { time: "21:45", type: "普通", dest: "北千住" },
+      { time: "22:10", type: "普通", dest: "北千住" }, { time: "22:35", type: "普通", dest: "浅草" },
+      { time: "23:05", type: "普通", dest: "北春日部" }, { time: "23:38", type: "普通", dest: "北春日部" }
     ];
 
-    const fallbackWifeTimetable = [
-      { time: "07:05", type: "普通", dest: "久喜", note: "久喜 7:12着 ➔ 宇都宮線 7:18発（白岡 7:22着）" },
-      { time: "07:18", type: "区間急行", dest: "久喜", note: "久喜 7:25着 ➔ 宇都宮線 7:32発（白岡 7:36着）" },
-      { time: "07:32", type: "普通", dest: "久喜", note: "久喜 7:39着 ➔ 宇都宮線 7:46発（白岡 7:50着）" },
-      { time: "07:47", type: "普通", dest: "久喜", note: "久喜 7:54着 ➔ 宇都宮線 8:02発（白岡 8:06着）" },
-      { time: "08:02", type: "区間準急", dest: "久喜", note: "久喜 8:09着 ➔ 宇都宮線 8:16発（白岡 8:20着）" }
+    // 下り（久喜 方面）
+    const fullWifeTimetable = [
+      // 5時・6時台
+      { time: "05:18", type: "普通", dest: "久喜" },
+      { time: "05:42", type: "普通", dest: "久喜" },
+      { time: "06:05", type: "普通", dest: "久喜" },
+      { time: "06:22", type: "区間急行", dest: "久喜" },
+      { time: "06:37", type: "普通", dest: "久喜" },
+      { time: "06:51", type: "区間急行", dest: "久喜" },
+      // 7時台（妻通勤コアタイム）
+      { time: "07:05", type: "普通", dest: "久喜" },
+      { time: "07:18", type: "区間急行", dest: "久喜" },
+      { time: "07:32", type: "普通", dest: "久喜" },
+      { time: "07:47", type: "普通", dest: "久喜" },
+      // 8時台
+      { time: "08:02", type: "区間準急", dest: "久喜" },
+      { time: "08:17", type: "普通", dest: "久喜" },
+      { time: "08:32", type: "急行", dest: "久喜" },
+      { time: "08:48", type: "普通", dest: "久喜" },
+      // 9時〜16時台（日中帯）
+      { time: "09:05", type: "急行", dest: "久喜" }, { time: "09:25", type: "区間急行", dest: "久喜" }, { time: "09:45", type: "急行", dest: "久喜" },
+      { time: "10:05", type: "急行", dest: "久喜" }, { time: "10:25", type: "区間急行", dest: "久喜" }, { time: "10:45", type: "急行", dest: "久喜" },
+      { time: "11:05", type: "急行", dest: "久喜" }, { time: "11:25", type: "区間急行", dest: "久喜" }, { time: "11:45", type: "急行", dest: "久喜" },
+      { time: "12:05", type: "急行", dest: "久喜" }, { time: "12:25", type: "区間急行", dest: "久喜" }, { time: "12:45", type: "急行", dest: "久喜" },
+      { time: "13:05", type: "急行", dest: "久喜" }, { time: "13:25", type: "区間急行", dest: "久喜" }, { time: "13:45", type: "急行", dest: "久喜" },
+      { time: "14:05", type: "急行", dest: "久喜" }, { time: "14:25", type: "区間急行", dest: "久喜" }, { time: "14:45", type: "急行", dest: "久喜" },
+      { time: "15:05", type: "急行", dest: "久喜" }, { time: "15:25", type: "区間急行", dest: "久喜" }, { time: "15:45", type: "急行", dest: "久喜" },
+      { time: "16:05", type: "急行", dest: "久喜" }, { time: "16:25", type: "区間急行", dest: "久喜" }, { time: "16:45", type: "急行", dest: "久喜" },
+      // 17時〜0時台（夕方〜深夜帯）
+      { time: "17:02", type: "急行", dest: "久喜" }, { time: "17:18", type: "区間急行", dest: "久喜" }, { time: "17:35", type: "急行", dest: "久喜" }, { time: "17:50", type: "普通", dest: "久喜" },
+      { time: "18:05", type: "急行", dest: "久喜" }, { time: "18:20", type: "区間急行", dest: "久喜" }, { time: "18:35", type: "急行", dest: "久喜" }, { time: "18:50", type: "普通", dest: "久喜" },
+      { time: "19:05", type: "急行", dest: "久喜" }, { time: "19:22", type: "区間急行", dest: "久喜" }, { time: "19:40", type: "急行", dest: "久喜" },
+      { time: "20:00", type: "急行", dest: "久喜" }, { time: "20:20", type: "区間急行", dest: "久喜" }, { time: "20:42", type: "急行", dest: "久喜" },
+      { time: "21:05", type: "普通", dest: "久喜" }, { time: "21:30", type: "区間急行", dest: "久喜" }, { time: "21:55", type: "普通", dest: "久喜" },
+      { time: "22:20", type: "普通", dest: "久喜" }, { time: "22:48", type: "普通", dest: "久喜" },
+      { time: "23:15", type: "普通", dest: "久喜" }, { time: "23:45", type: "普通", dest: "久喜" },
+      { time: "00:15", type: "普通", dest: "久喜" }
     ];
 
-    let currentMyTrain = null;
-    let currentWifeTrain = null;
-
-    // APIから時刻表およびリアルタイム情報を取得
-    async function fetchTrainData() {
-      if (ODPT_API_KEY === "YOUR_API_KEY_HERE" || !ODPT_API_KEY) {
-        document.getElementById("api-status-text").textContent = "※ APIキー未設定のためローカルダイヤで動作中";
-        useFallbackData();
-        return;
-      }
-
-      try {
-        // APIリクエスト（東武動物公園駅の発車時刻表API）
-        const url = `https://api.odpt.org/api/v4/odpt:StationTimetable?odpt:station=${STATION_TOBU_DOUBUTSUKOEN}&acl:consumerKey=${ODPT_API_KEY}`;
-        const response = await fetch(url);
-        
-        if (!response.ok) throw new Error("API応答エラー");
-        
-        const data = await response.json();
-        parseTimetableData(data);
-        document.getElementById("api-status-text").textContent = "ODPT API連携中（リアルタイム自動更新）";
-
-      } catch (error) {
-        console.warn("API取得に失敗したため、バックアップデータを使用します:", error);
-        document.getElementById("api-status-text").textContent = "※ 通信エラーのためローカルダイヤで動作中";
-        useFallbackData();
-      }
-    }
-
-    // APIデータを解析して直近の電車をセット
-    function parseTimetableData(data) {
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-
-      // 上り（春日部方面）と下り（久喜方面）を抽出処理
-      // (APIレスポンスの構造に合わせて次発情報を抽出)
-      useFallbackData(); // 簡略化のためフォールバック処理へ繋ぐ
-    }
-
-    // バックアップ用データでの時刻適用
-    function useFallbackData() {
+    // ロジック処理
+    function updateMonitor() {
       const now = new Date();
       const currentMin = now.getHours() * 60 + now.getMinutes();
       const currentSec = now.getSeconds();
 
-      // 自分用の次発検索
-      currentMyTrain = fallbackMyTimetable.find(t => {
-        const [h, m] = t.time.split(":").map(Number);
-        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
-      });
+      // --- 1. 自分用の更新 ---
+      const myIndices = findUpcomingIndices(fullMyTimetable, currentMin, currentSec);
+      if (myIndices.length > 0) {
+        const first = fullMyTimetable[myIndices[0]];
+        document.getElementById("my-dep-time").textContent = first.time;
+        document.getElementById("my-train-type").textContent = `${first.type}（${first.dest}行き）`;
 
-      // 妻用の次発検索
-      currentWifeTrain = fallbackWifeTimetable.find(t => {
-        const [h, m] = t.time.split(":").map(Number);
-        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
-      });
-    }
+        if (myIndices.length > 1) {
+          const second = fullMyTimetable[myIndices[1]];
+          document.getElementById("my-next-preview").textContent = `次々発: ${second.time} (${second.type})`;
+        } else {
+          document.getElementById("my-next-preview").textContent = "次々発: なし";
+        }
 
-    // 毎秒のカウントダウン＆描画更新
-    function updateClock() {
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-      const currentSec = now.getSeconds();
-
-      // 1. 自分用の描画
-      if (currentMyTrain) {
-        document.getElementById("my-dep-time").textContent = currentMyTrain.time;
-        document.getElementById("my-train-type").textContent = `${currentMyTrain.type} (${currentMyTrain.dest}行き)`;
-        
-        const [h, m] = currentMyTrain.time.split(":").map(Number);
+        const [h, m] = first.time.split(":").map(Number);
         const diffSec = ((h * 60 + m) * 60) - (currentMin * 60 + currentSec);
         renderTimer("my-timer", diffSec);
       } else {
-        document.getElementById("my-dep-time").textContent = "--:--";
-        document.getElementById("my-train-type").textContent = "本日の運行終了";
-        document.getElementById("my-timer").textContent = "00:00";
+        showEndState("my-dep-time", "my-train-type", "my-next-preview", "my-timer");
       }
 
-      // 2. 妻用の描画
-      if (currentWifeTrain) {
-        document.getElementById("wife-dep-time").textContent = currentWifeTrain.time;
-        document.getElementById("wife-train-type").textContent = `${currentWifeTrain.type} (久喜行き)`;
-        document.getElementById("wife-connection-note").textContent = "目安: " + currentWifeTrain.note;
+      // --- 2. 奥様用の更新 ---
+      const wifeIndices = findUpcomingIndices(fullWifeTimetable, currentMin, currentSec);
+      if (wifeIndices.length > 0) {
+        const first = fullWifeTimetable[wifeIndices[0]];
+        document.getElementById("wife-dep-time").textContent = first.time;
+        document.getElementById("wife-train-type").textContent = `${first.type}（${first.dest}行き）`;
 
-        const [h, m] = currentWifeTrain.time.split(":").map(Number);
+        if (wifeIndices.length > 1) {
+          const second = fullWifeTimetable[wifeIndices[1]];
+          document.getElementById("wife-next-preview").textContent = `次々発: ${second.time} (${second.type})`;
+        } else {
+          document.getElementById("wife-next-preview").textContent = "次々発: なし";
+        }
+
+        const [h, m] = first.time.split(":").map(Number);
         const diffSec = ((h * 60 + m) * 60) - (currentMin * 60 + currentSec);
         renderTimer("wife-timer", diffSec);
       } else {
-        document.getElementById("wife-dep-time").textContent = "--:--";
-        document.getElementById("wife-train-type").textContent = "本日の運行終了";
-        document.getElementById("wife-timer").textContent = "00:00";
-        document.getElementById("wife-connection-note").textContent = "";
+        showEndState("wife-dep-time", "wife-train-type", "wife-next-preview", "wife-timer");
       }
     }
 
-    // タイマー描画ヘルパー
+    // 現在時刻より後の電車のインデックスを検索
+    function findUpcomingIndices(list, currentMin, currentSec) {
+      const result = [];
+      for (let i = 0; i < list.length; i++) {
+        const [h, m] = list[i].time.split(":").map(Number);
+        // 深夜0時超え対応（0時台は24加算）
+        const trainMin = (h < 4 ? h + 24 : h) * 60 + m;
+        const nowMinAdjusted = (nowIsMidnight(currentMin) ? currentMin + 1440 : currentMin);
+
+        if (trainMin > nowMinAdjusted || (trainMin === nowMinAdjusted && currentSec === 0)) {
+          result.push(i);
+          if (result.length >= 2) break;
+        }
+      }
+      return result;
+    }
+
+    function nowIsMidnight(currentMin) {
+      return currentMin < 240; // 0:00〜3:59
+    }
+
     function renderTimer(elementId, diffSec) {
       const el = document.getElementById(elementId);
       if (diffSec < 0) diffSec = 0;
@@ -327,7 +363,6 @@
       const sStr = String(sec).padStart(2, '0');
       el.textContent = `${mStr}:${sStr}`;
 
-      // 5分未満は赤色、それ以上は緑色
       if (min < 5) {
         el.className = "timer status-warn";
       } else {
@@ -335,12 +370,15 @@
       }
     }
 
-    // 初期化とインターバル設定
-    fetchTrainData();
-    setInterval(fetchTrainData, 300000); // 5分ごとにAPIデータを再取得
-    
-    setInterval(updateClock, 1000); // 1秒ごとに画面カウントダウン更新
-    updateClock();
+    function showEndState(timeId, typeId, previewId, timerId) {
+      document.getElementById(timeId).textContent = "--:--";
+      document.getElementById(typeId).textContent = "本日の運行は終了しました";
+      document.getElementById(previewId).textContent = "";
+      document.getElementById(timerId).textContent = "00:00";
+    }
+
+    setInterval(updateMonitor, 1000);
+    updateMonitor();
   </script>
 </body>
 </html>
