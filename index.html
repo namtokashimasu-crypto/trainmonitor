@@ -32,17 +32,18 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 15px;
+      padding: 20px;
     }
 
+    /* 画面を広く使うため max-width を 1200px に拡張 */
     .board-container {
       background-color: var(--bg-board);
       width: 100%;
-      max-width: 900px;
+      max-width: 1200px;
       border: 12px solid var(--border-outer);
       border-radius: 8px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
-      padding: 15px 20px;
+      padding: 20px 28px;
       transition: border-color 0.5s ease;
     }
 
@@ -61,51 +62,57 @@
       display: flex;
       align-items: center;
       border-bottom: 2px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .platform-num {
       background: linear-gradient(135deg, #111, #333);
       color: #fff;
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-weight: 900;
-      padding: 2px 14px;
+      padding: 2px 18px;
       border: 2px solid #fff;
       border-right: 8px solid #f60;
-      margin-right: 15px;
+      margin-right: 18px;
       font-family: 'Chakra Petch', sans-serif;
+      flex-shrink: 0;
     }
 
     .banner-text {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       color: #ddd;
       font-weight: bold;
       letter-spacing: 0.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
+    /* 列幅を固定パーセンテージにして幅のぶれを防止 */
     .board-header {
       display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
+      grid-template-columns: 22% 20% 43% 15%;
       color: var(--text-gray);
-      font-size: 0.85rem;
+      font-size: 1rem;
       border-bottom: 1px solid #444;
-      padding-bottom: 4px;
+      padding-bottom: 6px;
       text-align: center;
     }
 
     .board-row {
       display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
+      grid-template-columns: 22% 20% 43% 15%;
       align-items: center;
-      padding: 12px 0;
+      padding: 14px 0;
       border-bottom: 1px solid #222;
       text-align: center;
+      min-height: 80px; /* 行高さを固定 */
     }
 
     .dept-time {
       font-family: 'Chakra Petch', sans-serif;
-      font-size: 3.2rem;
+      font-size: 3.6rem;
       font-weight: 700;
       color: var(--text-white);
       letter-spacing: -1px;
@@ -115,8 +122,9 @@
     .train-badge {
       display: inline-block;
       width: 85%;
-      padding: 6px 0;
-      font-size: 1.3rem;
+      max-width: 160px;
+      padding: 8px 0;
+      font-size: 1.4rem;
       font-weight: 900;
       border-radius: 4px;
       text-align: center;
@@ -127,40 +135,45 @@
     .badge-semi { background-color: var(--badge-semi); color: #fff; }
 
     .destination {
-      font-size: 2rem;
+      font-size: 2.3rem;
       font-weight: 900;
       color: var(--text-white);
       text-align: left;
-      padding-left: 10px;
+      padding-left: 20px;
+      white-space: nowrap;
     }
 
     .cars-info {
       font-family: 'Chakra Petch', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-weight: 700;
       color: var(--text-white);
     }
 
-    .cars-unit { font-size: 0.9rem; font-weight: normal; margin-left: 2px; }
+    .cars-unit { font-size: 1.1rem; font-weight: normal; margin-left: 4px; }
 
     .notice-bar {
       background-color: #111;
       color: var(--ok-green);
       border: 1px solid #333;
-      padding: 10px 15px;
-      margin: 15px 0;
-      font-size: 1.2rem;
+      padding: 12px 18px;
+      margin: 18px 0;
+      font-size: 1.25rem;
       font-weight: bold;
       text-align: center;
       letter-spacing: 1px;
       transition: all 0.3s ease;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .notice-bar.has-delay {
       background-color: #4a0000;
       color: #ffffff;
       border-color: var(--delay-red);
-      font-size: 1.3rem;
+      font-size: 1.35rem;
     }
 
     /* 妻通勤セクション */
@@ -168,18 +181,19 @@
       background: #080c14;
       border: 2px solid #1c2d42;
       border-radius: 6px;
-      padding: 12px 15px;
-      margin-top: 10px;
+      padding: 16px 20px;
+      margin-top: 14px;
     }
 
     .wife-header {
       color: var(--text-orange);
-      font-size: 1rem;
+      font-size: 1.15rem;
       font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      min-height: 30px;
     }
 
     .wife-connection-flow {
@@ -188,31 +202,35 @@
       justify-content: space-between;
       background: #000;
       border: 1px solid #333;
-      padding: 10px 15px;
+      padding: 14px 20px;
       border-radius: 4px;
+      min-height: 100px; /* カード内部の高さを固定 */
     }
 
     .step-box { text-align: center; flex: 1; }
-    .step-station { font-size: 0.85rem; color: var(--text-gray); font-weight: bold; }
+    .step-station { font-size: 0.95rem; color: var(--text-gray); font-weight: bold; margin-bottom: 4px; }
     .step-time {
       font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: bold;
       color: var(--text-yellow);
+      white-space: nowrap;
     }
-    .step-label { font-size: 0.85rem; color: #fff; }
+    .step-label { font-size: 0.9rem; color: #fff; margin-top: 4px; }
+    
     .platform-badge {
       display: inline-block;
       background: #333;
       color: #ffcc00;
       border: 1px solid #ffcc00;
-      font-size: 0.75rem;
-      padding: 1px 5px;
+      font-size: 0.8rem;
+      padding: 2px 6px;
       border-radius: 3px;
-      margin-left: 4px;
+      margin-left: 6px;
       font-family: 'Noto Sans JP', sans-serif;
     }
-    .arrow { color: var(--text-orange); font-size: 1.5rem; font-weight: bold; padding: 0 5px; }
+    
+    .arrow { color: var(--text-orange); font-size: 1.8rem; font-weight: bold; padding: 0 10px; }
   </style>
 </head>
 <body>
@@ -231,7 +249,7 @@
     <div class="board-header">
       <div id="hdr-dept">発車時刻</div>
       <div id="hdr-train">種別</div>
-      <div style="text-align: left; padding-left: 10px;" id="hdr-to">行先</div>
+      <div style="text-align: left; padding-left: 20px;" id="hdr-to">行先</div>
       <div id="hdr-cars">両数</div>
     </div>
 
@@ -249,30 +267,30 @@
     </div>
 
     <!-- 次発 (2本目) -->
-    <div class="board-row" style="padding: 6px 0;">
-      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">--:--</div>
-      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">普通</span></div>
-      <div class="destination" id="m2-dest" style="font-size: 1.6rem;">--</div>
-      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">--<span class="cars-unit" id="m2-unit">両</span></div>
+    <div class="board-row" style="padding: 8px 0;">
+      <div class="dept-time" id="m2-time" style="font-size: 2.8rem;">--:--</div>
+      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.2rem;">普通</span></div>
+      <div class="destination" id="m2-dest" style="font-size: 1.8rem;">--</div>
+      <div class="cars-info" id="m2-cars" style="font-size: 2.1rem;">--<span class="cars-unit" id="m2-unit">両</span></div>
     </div>
 
     <!-- 次々発 (3本目) -->
-    <div class="board-row" style="padding: 6px 0; border: none;">
-      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">--:--</div>
-      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">急行</span></div>
-      <div class="destination" id="m3-dest" style="font-size: 1.6rem;">--</div>
-      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">--<span class="cars-unit" id="m3-unit">両</span></div>
+    <div class="board-row" style="padding: 8px 0; border: none;">
+      <div class="dept-time" id="m3-time" style="font-size: 2.8rem;">--:--</div>
+      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.2rem;">急行</span></div>
+      <div class="destination" id="m3-dest" style="font-size: 1.8rem;">--</div>
+      <div class="cars-info" id="m3-cars" style="font-size: 2.1rem;">--<span class="cars-unit" id="m3-unit">両</span></div>
     </div>
 
-    <!-- 3. 妻通勤カード（番線表示＋接続） -->
+    <!-- 3. 妻通勤カード（レイアウト完全固定版） -->
     <div class="wife-section">
       <div class="wife-header">
         <span id="wife-card-title">通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: var(--ok-green); font-family: monospace; font-size: 1.2rem;">あと --:--</span>
+        <span id="wife-countdown" style="color: var(--ok-green); font-family: monospace; font-size: 1.3rem;">あと --:--</span>
       </div>
 
       <div class="wife-connection-flow">
-        <!-- 東武動物公園（4番線） -->
+        <!-- 東武動物公園 -->
         <div class="step-box">
           <div class="step-station"><span id="st-tobu">東武動物公園</span> <span class="platform-badge">4番線</span></div>
           <div class="step-time" id="w-tobu-time">--:--</div>
@@ -281,10 +299,10 @@
 
         <div class="arrow">➔</div>
 
-        <!-- 久喜駅（1/2番線乗り換え） -->
-        <div class="step-box">
+        <!-- 久喜駅（1行に収まるフォーマットに統一） -->
+        <div class="step-box" style="flex: 1.4;">
           <div class="step-station"><span id="st-kuki">久喜駅 乗り換え</span> <span class="platform-badge">1・2番線</span></div>
-          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">--:--着 / --:--発</div>
+          <div class="step-time" id="w-kuki-time" style="color: #ff9900; font-size: 1.8rem;">--:-- Arr / --:-- Dep</div>
           <div class="step-label" id="lbl-jr-line">JR宇都宮線(大宮行)</div>
         </div>
 
@@ -304,10 +322,9 @@
   <script>
     const ODPT_API_KEY = "c7im4fjqeajwpurz9a295jbpdctk5q3mw9orll1m0hgbm9t016vrfvtpftebkhln";
 
-    let isEnglish = false; // 日英切替フラグ
+    let isEnglish = false;
     let globalDelayMinutes = 0;
 
-    // 妻通勤データ
     const wifeRoutes = [
       { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
       { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
@@ -324,7 +341,6 @@
       { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" }
     ];
 
-    // ダイヤ（日/英辞書つき）
     const myRoutes = [
       { time: "07:02", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "07:08", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
@@ -350,7 +366,6 @@
       { time: "20:25", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" }
     ];
 
-    // ★ 3秒ごとに「日本語 ⇄ 英語」を切り替えるタイマー ★
     setInterval(() => {
       isEnglish = !isEnglish;
       updateLanguageUI();
@@ -358,7 +373,6 @@
     }, 3000);
 
     function updateLanguageUI() {
-      // ヘッダー部分の日英切替
       document.getElementById("hdr-dept").textContent = isEnglish ? "Departure time" : "発車時刻";
       document.getElementById("hdr-train").textContent = isEnglish ? "Train" : "種別";
       document.getElementById("hdr-to").textContent = isEnglish ? "To" : "行先";
@@ -368,12 +382,10 @@
       document.getElementById("m2-unit").textContent = isEnglish ? "Cars" : "両";
       document.getElementById("m3-unit").textContent = isEnglish ? "Cars" : "両";
 
-      // 上部バー
       document.getElementById("top-banner-text").textContent = isEnglish 
         ? "for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan"
         : "春日部・北千住・とうきょうスカイツリー・浅草・中目黒・渋谷・中央林間 方面";
 
-      // 妻通勤カード
       document.getElementById("wife-card-title").textContent = isEnglish
         ? "Commute: Transfer at Kuki ➔ JR Utsunomiya Line for Shiraoka"
         : "通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続";
@@ -453,9 +465,12 @@
 
       if (nextRoute) {
         document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
+        
+        // 久喜着/発を常に1行に統一（レイアウト崩れを完全に解決）
         document.getElementById("w-kuki-time").textContent = isEnglish 
           ? `${nextRoute.kukiArr} Arr / ${nextRoute.jrDep} Dep`
           : `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
+
         document.getElementById("w-shiraoka-time").textContent = nextRoute.shiraokaArr;
 
         const [h, m] = nextRoute.tobuDep.split(":").map(Number);
@@ -471,7 +486,7 @@
         countdownEl.textContent = `${prefixText}${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
       } else {
         document.getElementById("w-tobu-time").textContent = "--:--";
-        document.getElementById("w-kuki-time").textContent = "--:--";
+        document.getElementById("w-kuki-time").textContent = "--:-- Arr / --:-- Dep";
         document.getElementById("w-shiraoka-time").textContent = "--:--";
         document.getElementById("wife-countdown").textContent = isEnglish ? "End of Service" : "本日の運行終了";
       }
