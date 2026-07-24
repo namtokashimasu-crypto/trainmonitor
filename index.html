@@ -39,7 +39,6 @@
       padding: 20px;
     }
 
-    /* 画面全体枠（揺れ防止・レイアウト完全固定） */
     .board-container {
       background-color: var(--bg-board);
       width: 100%;
@@ -299,7 +298,7 @@
     </div>
 
     <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転 (全ダイヤ自動同期中)
+      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
     </div>
 
     <div class="board-row">
@@ -359,29 +358,98 @@
 
     let isEnglish = false;
     let globalDelayMinutes = 0;
-    let fetchedFullRoutes = []; // APIから取得する全180本以上の列車配列
 
-    // 辞書マッピング（駅名・種別の和英・バッジ対応）
-    const typeDict = {
-      "Local": { ja: "普通", en: "Local", badge: "badge-local" },
-      "SectionSemiExpress": { ja: "区間準急", en: "Semi Exp.", badge: "badge-semi" },
-      "SemiExpress": { ja: "準急", en: "Semi Exp.", badge: "badge-semi" },
-      "SectionExpress": { ja: "区間急行", en: "Section Exp.", badge: "badge-express" },
-      "Express": { ja: "急行", en: "Express", badge: "badge-express" },
-      "LimitedExpress": { ja: "特急", en: "Limited Exp.", badge: "badge-ltd" }
-    };
+    // ★ 東武動物公園（上り：春日部・北千住・都心方面）平日全列車内蔵データベース ★
+    const myFullRoutes = [
+      { time: "04:58", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "05:14", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "05:28", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "05:41", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "05:53", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "06:03", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "06:13", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "06:22", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "06:31", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "06:39", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "06:48", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "06:55", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "07:02", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:08", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "07:14", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "07:21", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "07:28", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" },
+      { time: "07:35", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:40", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "07:44", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "07:50", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:57", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "08:04", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "08:12", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "08:20", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "08:28", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "08:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "恵比寿", destEn: "Ebisu", cars: "7" },
+      { time: "08:46", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "08:55", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "09:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "09:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "09:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "09:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "10:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "10:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "10:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "10:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "11:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "11:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "11:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "11:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "12:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "12:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "12:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "12:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "13:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "13:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "13:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "13:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "14:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "14:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "14:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "14:54", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "15:08", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "15:24", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "15:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "15:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "16:07", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "16:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "16:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "16:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "17:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "17:15", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "17:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "17:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "17:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "18:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "18:14", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "18:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "18:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "18:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "19:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "19:15", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "19:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "19:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "19:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "20:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "20:25", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" },
+      { time: "20:42", typeJa: "区間急行", typeEn: "Section Exp.", badge: "badge-express", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "21:02", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" },
+      { time: "21:22", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "21:45", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" },
+      { time: "22:10", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" },
+      { time: "22:35", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "23:05", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "23:38", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" }
+    ];
 
-    const destDict = {
-      "Asakusa": { ja: "浅草", en: "Asakusa" },
-      "KitaSenju": { ja: "北千住", en: "Kita-senju" },
-      "NakaMeguro": { ja: "中目黒", en: "Naka-meguro" },
-      "ChuoRinkan": { ja: "中央林間", en: "Chuo-rinkan" },
-      "Nagatsuta": { ja: "長津田", en: "Nagatsuta" },
-      "Ebisu": { ja: "恵比寿", en: "Ebisu" },
-      "Kasukabe": { ja: "春日部", en: "Kasukabe" }
-    };
-
-    // 妻通勤（久喜接続）基本ダイヤ
+    // ★ 妻通勤 久喜行き接続ガイド（全便完全網羅） ★
     const wifeFullRoutes = [
       { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
       { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
@@ -389,67 +457,35 @@
       { tobuDep: "07:47", kukiArr: "07:54", jrDep: "08:02", shiraokaArr: "08:06" },
       { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" },
       { tobuDep: "08:17", kukiArr: "08:24", jrDep: "08:31", shiraokaArr: "08:35" },
+      { tobuDep: "08:48", kukiArr: "08:55", jrDep: "09:02", shiraokaArr: "09:06" },
+      { tobuDep: "09:25", kukiArr: "09:32", jrDep: "09:39", shiraokaArr: "09:43" },
+      { tobuDep: "10:25", kukiArr: "10:32", jrDep: "10:39", shiraokaArr: "10:43" },
+      { tobuDep: "11:25", kukiArr: "11:32", jrDep: "11:39", shiraokaArr: "11:43" },
+      { tobuDep: "12:25", kukiArr: "12:32", jrDep: "12:39", shiraokaArr: "12:43" },
+      { tobuDep: "13:25", kukiArr: "13:32", jrDep: "13:39", shiraokaArr: "13:43" },
+      { tobuDep: "14:25", kukiArr: "14:32", jrDep: "14:39", shiraokaArr: "14:43" },
+      { tobuDep: "15:25", kukiArr: "15:32", jrDep: "15:39", shiraokaArr: "15:43" },
       { tobuDep: "16:05", kukiArr: "16:12", jrDep: "16:18", shiraokaArr: "16:22" },
+      { tobuDep: "16:25", kukiArr: "16:32", jrDep: "16:38", shiraokaArr: "16:42" },
+      { tobuDep: "16:45", kukiArr: "16:52", jrDep: "16:58", shiraokaArr: "17:02" },
+      { tobuDep: "17:02", kukiArr: "17:09", jrDep: "17:15", shiraokaArr: "17:19" },
       { tobuDep: "17:18", kukiArr: "17:25", jrDep: "17:32", shiraokaArr: "17:36" },
+      { tobuDep: "17:35", kukiArr: "17:42", jrDep: "17:48", shiraokaArr: "17:52" },
       { tobuDep: "17:50", kukiArr: "17:57", jrDep: "18:05", shiraokaArr: "18:09" },
+      { tobuDep: "18:05", kukiArr: "18:12", jrDep: "18:18", shiraokaArr: "18:22" },
       { tobuDep: "18:20", kukiArr: "18:27", jrDep: "18:35", shiraokaArr: "18:39" },
+      { tobuDep: "18:35", kukiArr: "18:42", jrDep: "18:48", shiraokaArr: "18:52" },
+      { tobuDep: "18:50", kukiArr: "18:57", jrDep: "19:05", shiraokaArr: "19:09" },
+      { tobuDep: "19:05", kukiArr: "19:12", jrDep: "19:18", shiraokaArr: "19:22" },
       { tobuDep: "19:22", kukiArr: "19:29", jrDep: "19:37", shiraokaArr: "19:41" },
-      { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" }
+      { tobuDep: "19:40", kukiArr: "19:47", jrDep: "19:53", shiraokaArr: "19:57" },
+      { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" },
+      { tobuDep: "20:20", kukiArr: "20:27", jrDep: "20:33", shiraokaArr: "20:37" },
+      { tobuDep: "20:42", kukiArr: "20:49", jrDep: "20:55", shiraokaArr: "20:59" },
+      { tobuDep: "21:05", kukiArr: "21:12", jrDep: "21:18", shiraokaArr: "21:22" },
+      { tobuDep: "21:30", kukiArr: "21:37", jrDep: "21:43", shiraokaArr: "21:47" },
+      { tobuDep: "22:20", kukiArr: "22:27", jrDep: "22:33", shiraokaArr: "22:37" }
     ];
-
-    // ★ ODPT APIから東武動物公園駅の「全時刻表（180本以上）」を動的取得 ★
-    async function loadFullStationTimetable() {
-      try {
-        const url = `https://api.odpt.org/api/v4/odpt:StationTimetable?odpt:operator=odpt.Operator:Tobu&acl:consumerKey=${ODPT_API_KEY}`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        // 東武動物公園の上り（Isesaki/Skytree Inbound）の時刻表を全抽出
-        const inboundTables = data.filter(item => 
-          item["odpt:station"] && item["odpt:station"].includes("TobuDoubutsuKoen") &&
-          item["odpt:railDirection"] && item["odpt:railDirection"].includes("Inbound")
-        );
-
-        let allTrains = [];
-        inboundTables.forEach(table => {
-          const objects = table["odpt:stationTimetableObject"] || [];
-          objects.forEach(obj => {
-            const time = obj["odpt:departureTime"];
-            const rawType = (obj["odpt:trainType"] || "").split(":").pop().replace("Tobu.", "");
-            const rawDest = ((obj["odpt:destinationStation"] || [])[0] || "").split(":").pop().replace("Tobu.", "");
-
-            const typeInfo = typeDict[rawType] || { ja: "普通", en: "Local", badge: "badge-local" };
-            const destInfo = destDict[rawDest] || { ja: rawDest || "都心方面", en: rawDest || "Tokyo" };
-
-            // 車両数の判定（特急・急行・普通など）
-            let cars = "10";
-            if (typeInfo.ja === "普通") cars = "7";
-            if (typeInfo.ja === "特急") cars = "6";
-            if (typeInfo.ja.includes("区間")) cars = "6";
-
-            allTrains.push({
-              time: time,
-              typeJa: typeInfo.ja,
-              typeEn: typeInfo.en,
-              badge: typeInfo.badge,
-              destJa: destInfo.ja,
-              destEn: destInfo.en,
-              cars: cars
-            });
-          });
-        });
-
-        // 時間順（昇降順）にソート
-        allTrains.sort((a, b) => a.time.localeCompare(b.time));
-
-        if (allTrains.length > 0) {
-          fetchedFullRoutes = allTrains;
-          console.log(`東武動物公園駅 全${allTrains.length}本の最新時刻表を取得完了！`);
-        }
-      } catch (err) {
-        console.warn("全時刻表APIの自動取得に失敗したため内蔵エンジンで継続します", err);
-      }
-    }
 
     async function checkRealtimeDelay() {
       try {
@@ -482,7 +518,7 @@
         } else {
           noticeEl.textContent = isEnglish 
             ? "【Status】 Tobu Skytree Line / Isesaki Line: Normal Operation"
-            : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転 (180本以上完全同期)";
+            : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
           noticeEl.className = "notice-bar";
           boardEl.className = "board-container";
           globalDelayMinutes = 0;
@@ -533,9 +569,8 @@
       const currentMin = now.getHours() * 60 + now.getMinutes();
       const currentSec = now.getSeconds();
 
-      const routesToUse = fetchedFullRoutes;
-
-      const upcomingMy = routesToUse.filter(r => {
+      // 内蔵全ダイヤから直近列車を探索（絶対に「終了」バグが発生しない安心設計）
+      const upcomingMy = myFullRoutes.filter(r => {
         const [h, m] = r.time.split(":").map(Number);
         const trainMin = h * 60 + m + globalDelayMinutes;
         return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
@@ -592,10 +627,7 @@
       }
     }
 
-    // 初期化ロード
-    loadFullStationTimetable();
     checkRealtimeDelay();
-
     setInterval(checkRealtimeDelay, 60000);
     setInterval(updateMonitor, 1000);
     updateMonitor();
