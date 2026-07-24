@@ -193,7 +193,7 @@
       justify-content: center;
     }
 
-    /* 下段マルチ接続カード（高視認性改修） */
+    /* 下段マルチ接続カード */
     .info-section {
       background: #060b18;
       border: 2px solid #1c2d4a;
@@ -408,7 +408,6 @@
     let audioCtx = null;
     let lastChimeTime = "";
 
-    // チャイム鳴動
     function playChime() {
       if (!audioEnabled) return;
       try {
@@ -457,7 +456,6 @@
       if (!audioEnabled) toggleAudio();
     }, { once: true });
 
-    // 3秒ごとに日英切替
     setInterval(() => {
       isEnglish = !isEnglish;
       updateLanguageUI();
@@ -490,7 +488,6 @@
       document.getElementById("lbl-dest-arr").textContent = isEnglish ? "Est. Arrival" : "到着予定";
     }
 
-    // CSV解析から組み込んだ全データ参照関数
     function getTodayDatasets() {
       const day = new Date().getDay();
       const isWeekend = (day === 0 || day === 6);
@@ -504,7 +501,7 @@
       if (!timeStr || timeStr === "---") return 9999;
       const [h, m] = timeStr.split(":").map(Number);
       let mins = h * 60 + m;
-      if (h < 4) mins += 1440; // 深夜24:11対応
+      if (h < 4) mins += 1440; // 深夜24時台
       return mins;
     }
 
@@ -518,13 +515,24 @@
 
       const { upTrains, connections } = getTodayDatasets();
 
-      // 1. 上部発車標更新
-      const upcomingUp = upTrains.filter(r => {
-        const trainMin = timeToMinutes(r.time);
-        return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
-      });
+      // 当日の最終列車時刻（分）を取得
+      const lastTrainMin = Math.max(...upTrains.map(r => timeToMinutes(r.time)));
+      const switchMin = lastTrainMin + 10; // ★ 最終列車10分後に切り替え
+
+      let upcomingUp = [];
+
+      if (currentMin > switchMin) {
+        // ★ 最終列車の10分後を過ぎた場合：自動で「翌朝の始発」を表示！
+        upcomingUp = upTrains.slice(0, 3);
+      } else {
+        upcomingUp = upTrains.filter(r => {
+          const trainMin = timeToMinutes(r.time);
+          return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
+        });
+      }
 
       if (upcomingUp.length === 0) {
+        // ★ 最終列車〜10分後までの間のみ「運転終了」を表示
         document.getElementById("notice-text").textContent = isEnglish 
           ? "【Notice】 End of today's train service."
           : "【案内】本日の電車は終了いたしました。";
@@ -549,12 +557,21 @@
         }
       }
 
-      // 2. 下段白岡接続カード更新
+      // 2. 下段白岡接続カード更新（接続側も10分後切り替え対応）
       const countdownEl = document.getElementById("info-countdown");
-      const nextConn = connections.find(r => {
-        const trainMin = timeToMinutes(r.tobuDep);
-        return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
-      });
+      const lastConnMin = Math.max(...connections.map(r => timeToMinutes(r.tobuDep)));
+      const connSwitchMin = lastConnMin + 10;
+
+      let nextConn = null;
+      if (currentMin > connSwitchMin) {
+        // ★ 最終接続の10分後を過ぎた場合：翌朝最初の接続を表示
+        nextConn = connections[0];
+      } else {
+        nextConn = connections.find(r => {
+          const trainMin = timeToMinutes(r.tobuDep);
+          return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
+        });
+      }
 
       if (nextConn) {
         document.getElementById("origin-dep-time").textContent = nextConn.tobuDep;
@@ -601,7 +618,7 @@
       document.getElementById(`${prefix}-badge`).className = "train-badge badge-end";
     }
 
-    // ★ CSVから抽出された完全リアルマスターデータ（省略なし） ★
+    // CSVマスターデータ（全便）
     const weekdayUpTrains = [
       { time: "05:09", typeJa: "準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
       { time: "05:19", typeJa: "準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
