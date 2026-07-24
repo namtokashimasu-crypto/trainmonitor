@@ -14,9 +14,10 @@
       --text-yellow: #ffcc00;
       --text-orange: #ff9900;
       --text-gray: #aaaaaa;
-      --badge-express: #e6007e;
-      --badge-local: #ffffff;
-      --badge-semi: #009944;
+      --badge-ltd: #d90429;     /* 特急レッド */
+      --badge-express: #e6007e; /* 急行ピンク */
+      --badge-semi: #009944;    /* 準急グリーン */
+      --badge-local: #ffffff;   /* 普通ホワイト */
       --delay-red: #ff3333;
       --ok-green: #00ff66;
     }
@@ -35,7 +36,6 @@
       padding: 20px;
     }
 
-    /* 画面を広く使うため max-width を 1200px に拡張 */
     .board-container {
       background-color: var(--bg-board);
       width: 100%;
@@ -89,7 +89,6 @@
       text-overflow: ellipsis;
     }
 
-    /* 列幅を固定パーセンテージにして幅のぶれを防止 */
     .board-header {
       display: grid;
       grid-template-columns: 22% 20% 43% 15%;
@@ -107,7 +106,7 @@
       padding: 14px 0;
       border-bottom: 1px solid #222;
       text-align: center;
-      min-height: 80px; /* 行高さを固定 */
+      min-height: 80px;
     }
 
     .dept-time {
@@ -124,12 +123,13 @@
       width: 85%;
       max-width: 160px;
       padding: 8px 0;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 900;
       border-radius: 4px;
       text-align: center;
     }
 
+    .badge-ltd { background-color: var(--badge-ltd); color: #fff; }
     .badge-express { background-color: var(--badge-express); color: #fff; }
     .badge-local { background-color: var(--badge-local); color: #000; }
     .badge-semi { background-color: var(--badge-semi); color: #fff; }
@@ -176,24 +176,54 @@
       font-size: 1.35rem;
     }
 
-    /* 妻通勤セクション */
+    /* ★ 妻通勤セクション（デザイン強化版） ★ */
     .wife-section {
-      background: #080c14;
-      border: 2px solid #1c2d42;
-      border-radius: 6px;
-      padding: 16px 20px;
-      margin-top: 14px;
+      background: #080d1a;
+      border: 2px solid #1a2a47;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     .wife-header {
-      color: var(--text-orange);
-      font-size: 1.15rem;
-      font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      min-height: 30px;
+      min-height: 32px;
+    }
+
+    .wife-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* TRANSFER INFO バッジ */
+    .transfer-badge {
+      background: linear-gradient(135deg, #ff9900, #ff6600);
+      color: #000;
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+
+    .wife-title-text {
+      color: var(--text-orange);
+      font-size: 1.15rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .wife-countdown-box {
+      background: #000;
+      border: 1px solid #2a3a57;
+      padding: 4px 12px;
+      border-radius: 4px;
     }
 
     .wife-connection-flow {
@@ -201,10 +231,10 @@
       align-items: center;
       justify-content: space-between;
       background: #000;
-      border: 1px solid #333;
+      border: 1px solid #223355;
       padding: 14px 20px;
-      border-radius: 4px;
-      min-height: 100px; /* カード内部の高さを固定 */
+      border-radius: 6px;
+      min-height: 100px;
     }
 
     .step-box { text-align: center; flex: 1; }
@@ -220,7 +250,7 @@
     
     .platform-badge {
       display: inline-block;
-      background: #333;
+      background: #222;
       color: #ffcc00;
       border: 1px solid #ffcc00;
       font-size: 0.8rem;
@@ -282,11 +312,16 @@
       <div class="cars-info" id="m3-cars" style="font-size: 2.1rem;">--<span class="cars-unit" id="m3-unit">両</span></div>
     </div>
 
-    <!-- 3. 妻通勤カード（レイアウト完全固定版） -->
+    <!-- 3. 妻通勤カード（カッコいいヘッダーデザイン版） -->
     <div class="wife-section">
       <div class="wife-header">
-        <span id="wife-card-title">通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: var(--ok-green); font-family: monospace; font-size: 1.3rem;">あと --:--</span>
+        <div class="wife-title-box">
+          <span class="transfer-badge">TRANSFER INFO</span>
+          <span class="wife-title-text" id="wife-card-title">久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
+        </div>
+        <div class="wife-countdown-box">
+          <span id="wife-countdown" style="color: var(--ok-green); font-family: monospace; font-size: 1.2rem; font-weight: bold;">あと --:--</span>
+        </div>
       </div>
 
       <div class="wife-connection-flow">
@@ -299,7 +334,7 @@
 
         <div class="arrow">➔</div>
 
-        <!-- 久喜駅（1行に収まるフォーマットに統一） -->
+        <!-- 久喜駅 -->
         <div class="step-box" style="flex: 1.4;">
           <div class="step-station"><span id="st-kuki">久喜駅 乗り換え</span> <span class="platform-badge">1・2番線</span></div>
           <div class="step-time" id="w-kuki-time" style="color: #ff9900; font-size: 1.8rem;">--:-- Arr / --:-- Dep</div>
@@ -325,6 +360,7 @@
     let isEnglish = false;
     let globalDelayMinutes = 0;
 
+    // 妻通勤データ（高頻度・全時間帯）
     const wifeRoutes = [
       { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
       { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
@@ -332,33 +368,48 @@
       { tobuDep: "07:47", kukiArr: "07:54", jrDep: "08:02", shiraokaArr: "08:06" },
       { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" },
       { tobuDep: "16:05", kukiArr: "16:12", jrDep: "16:18", shiraokaArr: "16:22" },
+      { tobuDep: "16:25", kukiArr: "16:32", jrDep: "16:38", shiraokaArr: "16:42" },
       { tobuDep: "16:45", kukiArr: "16:52", jrDep: "16:58", shiraokaArr: "17:02" },
+      { tobuDep: "17:02", kukiArr: "17:09", jrDep: "17:15", shiraokaArr: "17:19" },
       { tobuDep: "17:18", kukiArr: "17:25", jrDep: "17:32", shiraokaArr: "17:36" },
+      { tobuDep: "17:35", kukiArr: "17:42", jrDep: "17:48", shiraokaArr: "17:52" },
       { tobuDep: "17:50", kukiArr: "17:57", jrDep: "18:05", shiraokaArr: "18:09" },
+      { tobuDep: "18:05", kukiArr: "18:12", jrDep: "18:18", shiraokaArr: "18:22" },
       { tobuDep: "18:20", kukiArr: "18:27", jrDep: "18:35", shiraokaArr: "18:39" },
+      { tobuDep: "18:35", kukiArr: "18:42", jrDep: "18:48", shiraokaArr: "18:52" },
       { tobuDep: "18:50", kukiArr: "18:57", jrDep: "19:05", shiraokaArr: "19:09" },
+      { tobuDep: "19:05", kukiArr: "19:12", jrDep: "19:18", shiraokaArr: "19:22" },
       { tobuDep: "19:22", kukiArr: "19:29", jrDep: "19:37", shiraokaArr: "19:41" },
-      { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" }
+      { tobuDep: "19:40", kukiArr: "19:47", jrDep: "19:53", shiraokaArr: "19:57" },
+      { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" },
+      { tobuDep: "20:20", kukiArr: "20:27", jrDep: "20:33", shiraokaArr: "20:37" },
+      { tobuDep: "20:42", kukiArr: "20:49", jrDep: "20:55", shiraokaArr: "20:59" }
     ];
 
+    // ★ 特急（Limited Exp.）も含めた全ダイヤ ★
     const myRoutes = [
       { time: "07:02", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "07:08", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
       { time: "07:14", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
       { time: "07:21", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
       { time: "07:35", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:44", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
       { time: "07:50", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "08:04", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "16:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
       { time: "16:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "17:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "17:15", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
       { time: "17:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
       { time: "17:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
       { time: "17:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "18:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "18:14", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
       { time: "18:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "18:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
       { time: "18:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
       { time: "19:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "19:15", typeJa: "特急", typeEn: "Limited Exp.", badge: "badge-ltd", destJa: "浅草", destEn: "Asakusa", cars: "6" },
       { time: "19:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
       { time: "19:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
       { time: "19:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
@@ -387,8 +438,8 @@
         : "春日部・北千住・とうきょうスカイツリー・浅草・中目黒・渋谷・中央林間 方面";
 
       document.getElementById("wife-card-title").textContent = isEnglish
-        ? "Commute: Transfer at Kuki ➔ JR Utsunomiya Line for Shiraoka"
-        : "通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続";
+        ? "Transfer at Kuki ➔ JR Utsunomiya Line for Shiraoka"
+        : "久喜乗り換え ➔ JR宇都宮線 白岡行き接続";
 
       document.getElementById("st-tobu").textContent = isEnglish ? "Tobu-doubutsukoen Dep." : "東武動物公園 発";
       document.getElementById("lbl-tobu-line").textContent = isEnglish ? "Tobu Isesaki Line" : "東武伊勢崎線";
@@ -465,8 +516,6 @@
 
       if (nextRoute) {
         document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
-        
-        // 久喜着/発を常に1行に統一（レイアウト崩れを完全に解決）
         document.getElementById("w-kuki-time").textContent = isEnglish 
           ? `${nextRoute.kukiArr} Arr / ${nextRoute.jrDep} Dep`
           : `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
