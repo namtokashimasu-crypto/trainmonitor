@@ -46,7 +46,6 @@
       transition: border-color 0.5s ease;
     }
 
-    /* 遅延発生時に外枠を赤く点滅 */
     .board-container.is-delayed {
       border-color: var(--delay-red);
       animation: pulse-border 2s infinite;
@@ -144,7 +143,6 @@
 
     .cars-unit { font-size: 0.9rem; font-weight: normal; margin-left: 2px; }
 
-    /* ★ 運行状況＆遅延テロップバー ★ */
     .notice-bar {
       background-color: #111;
       color: var(--ok-green);
@@ -158,7 +156,6 @@
       transition: all 0.3s ease;
     }
 
-    /* 遅延発生時のテロップスタイル */
     .notice-bar.has-delay {
       background-color: #4a0000;
       color: #ffffff;
@@ -166,6 +163,7 @@
       font-size: 1.3rem;
     }
 
+    /* 妻通勤セクション */
     .wife-section {
       background: #080c14;
       border: 2px solid #1c2d42;
@@ -180,6 +178,7 @@
       font-weight: bold;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
 
@@ -193,103 +192,109 @@
       border-radius: 4px;
     }
 
-    .step-box { text-align: center; }
-    .step-station { font-size: 0.8rem; color: var(--text-gray); }
+    .step-box { text-align: center; flex: 1; }
+    .step-station { font-size: 0.85rem; color: var(--text-gray); font-weight: bold; }
     .step-time {
       font-family: 'Chakra Petch', sans-serif;
       font-size: 1.8rem;
       font-weight: bold;
       color: var(--text-yellow);
     }
-    .step-label { font-size: 0.9rem; color: #fff; }
-    .arrow { color: var(--text-orange); font-size: 1.5rem; font-weight: bold; }
-
-    .delay-badge-inline {
-      background-color: var(--delay-red);
-      color: #fff;
-      font-size: 0.8rem;
-      padding: 2px 6px;
+    .step-label { font-size: 0.85rem; color: #fff; }
+    .platform-badge {
+      display: inline-block;
+      background: #333;
+      color: #ffcc00;
+      border: 1px solid #ffcc00;
+      font-size: 0.75rem;
+      padding: 1px 5px;
       border-radius: 3px;
-      margin-left: 6px;
-      vertical-align: middle;
+      margin-left: 4px;
+      font-family: 'Noto Sans JP', sans-serif;
     }
+    .arrow { color: var(--text-orange); font-size: 1.5rem; font-weight: bold; padding: 0 5px; }
   </style>
 </head>
 <body>
 
   <div class="board-container" id="main-board">
     
+    <!-- 1. 上部ホーム案内 -->
     <div class="top-banner">
       <div class="platform-num">2</div>
-      <div class="banner-text">
-        for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan
+      <div class="banner-text" id="top-banner-text">
+        春日部・北千住・とうきょうスカイツリー・浅草・中目黒・渋谷・中央林間 方面
       </div>
     </div>
 
+    <!-- 2. 発車標テーブルヘッダー -->
     <div class="board-header">
-      <div>Departure time</div>
-      <div>Train</div>
-      <div style="text-align: left; padding-left: 10px;">To</div>
-      <div>Cars</div>
+      <div id="hdr-dept">発車時刻</div>
+      <div id="hdr-train">種別</div>
+      <div style="text-align: left; padding-left: 10px;" id="hdr-to">行先</div>
+      <div id="hdr-cars">両数</div>
     </div>
 
     <!-- 先発 (1本目) -->
     <div class="board-row">
       <div class="dept-time" id="m1-time">--:--</div>
-      <div><span class="train-badge badge-express" id="m1-badge">Express</span></div>
+      <div><span class="train-badge badge-express" id="m1-badge">急行</span></div>
       <div class="destination" id="m1-dest">--</div>
-      <div class="cars-info" id="m1-cars">--<span class="cars-unit">Cars</span></div>
+      <div class="cars-info" id="m1-cars">--<span class="cars-unit" id="m1-unit">両</span></div>
     </div>
 
-    <!-- ★ 運行状況リアルタイムテロップ ★ -->
+    <!-- 運行状況テロップ -->
     <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転 (API連動中)
+      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
     </div>
 
     <!-- 次発 (2本目) -->
     <div class="board-row" style="padding: 6px 0;">
       <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">--:--</div>
-      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">Local</span></div>
+      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">普通</span></div>
       <div class="destination" id="m2-dest" style="font-size: 1.6rem;">--</div>
-      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">--<span class="cars-unit">Cars</span></div>
+      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">--<span class="cars-unit" id="m2-unit">両</span></div>
     </div>
 
     <!-- 次々発 (3本目) -->
     <div class="board-row" style="padding: 6px 0; border: none;">
       <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">--:--</div>
-      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">Express</span></div>
+      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">急行</span></div>
       <div class="destination" id="m3-dest" style="font-size: 1.6rem;">--</div>
-      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">--<span class="cars-unit">Cars</span></div>
+      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">--<span class="cars-unit" id="m3-unit">両</span></div>
     </div>
 
-    <!-- 妻通勤カード -->
+    <!-- 3. 妻通勤カード（番線表示＋接続） -->
     <div class="wife-section">
       <div class="wife-header">
-        <span>通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
+        <span id="wife-card-title">通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
         <span id="wife-countdown" style="color: var(--ok-green); font-family: monospace; font-size: 1.2rem;">あと --:--</span>
       </div>
 
       <div class="wife-connection-flow">
+        <!-- 東武動物公園（4番線） -->
         <div class="step-box">
-          <div class="step-station">東武動物公園 発</div>
+          <div class="step-station"><span id="st-tobu">東武動物公園</span> <span class="platform-badge">4番線</span></div>
           <div class="step-time" id="w-tobu-time">--:--</div>
-          <div class="step-label">東武伊勢崎線</div>
+          <div class="step-label" id="lbl-tobu-line">東武伊勢崎線</div>
         </div>
 
         <div class="arrow">➔</div>
 
+        <!-- 久喜駅（1/2番線乗り換え） -->
         <div class="step-box">
-          <div class="step-station">久喜駅 乗り換え</div>
+          <div class="step-station"><span id="st-kuki">久喜駅 乗り換え</span> <span class="platform-badge">1・2番線</span></div>
           <div class="step-time" id="w-kuki-time" style="color: #ff9900;">--:--着 / --:--発</div>
-          <div class="step-label">JR宇都宮線(大宮行)</div>
+          <div class="step-label" id="lbl-jr-line">JR宇都宮線(大宮行)</div>
         </div>
 
         <div class="arrow">➔</div>
 
+        <!-- 白岡駅到着 -->
         <div class="step-box">
-          <div class="step-station">白岡駅 到着</div>
+          <div class="step-station" id="st-shiraoka">白岡駅 到着</div>
           <div class="step-time" id="w-shiraoka-time" style="color: var(--ok-green);">--:--</div>
-          <div class="step-label">到着予定</div>
+          <div class="step-label" id="lbl-shiraoka-arr">到着予定</div>
         </div>
       </div>
     </div>
@@ -297,12 +302,12 @@
   </div>
 
   <script>
-    // 設定いただいたODPT APIキー
     const ODPT_API_KEY = "c7im4fjqeajwpurz9a295jbpdctk5q3mw9orll1m0hgbm9t016vrfvtpftebkhln";
 
-    let globalDelayMinutes = 0; // 遅延分数（0＝平常）
+    let isEnglish = false; // 日英切替フラグ
+    let globalDelayMinutes = 0;
 
-    // 妻通勤用乗り換えダイヤテーブル
+    // 妻通勤データ
     const wifeRoutes = [
       { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
       { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
@@ -319,35 +324,70 @@
       { tobuDep: "20:00", kukiArr: "20:07", jrDep: "20:15", shiraokaArr: "20:19" }
     ];
 
-    // 東武動物公園（上り）全時間帯主要ダイヤ
+    // ダイヤ（日/英辞書つき）
     const myRoutes = [
-      { time: "07:02", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "07:08", type: "Local", badge: "badge-local", dest: "Naka-meguro", cars: "7" },
-      { time: "07:14", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "07:21", type: "Express", badge: "badge-express", dest: "Nagatsuta", cars: "10" },
-      { time: "07:35", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "07:50", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "08:04", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "16:52", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "17:07", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "17:22", type: "Express", badge: "badge-express", dest: "Nagatsuta", cars: "10" },
-      { time: "17:37", type: "Local", badge: "badge-local", dest: "Naka-meguro", cars: "7" },
-      { time: "17:52", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "18:07", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "18:22", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "18:37", type: "Local", badge: "badge-local", dest: "Naka-meguro", cars: "7" },
-      { time: "18:52", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "19:07", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "19:22", type: "Express", badge: "badge-express", dest: "Nagatsuta", cars: "10" },
-      { time: "19:37", type: "Local", badge: "badge-local", dest: "Naka-meguro", cars: "7" },
-      { time: "19:52", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
-      { time: "20:07", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "20:25", type: "Local", badge: "badge-local", dest: "Kita-senju", cars: "7" },
-      { time: "20:42", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
-      { time: "21:02", type: "Local", badge: "badge-local", dest: "Kita-senju", cars: "7" }
+      { time: "07:02", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:08", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "07:14", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "07:21", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "07:35", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "07:50", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "08:04", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "16:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "17:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "17:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "17:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "17:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "18:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "18:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "18:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "18:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "19:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "19:22", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
+      { time: "19:37", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "中目黒", destEn: "Naka-meguro", cars: "7" },
+      { time: "19:52", typeJa: "急行", typeEn: "Express", badge: "badge-express", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
+      { time: "20:07", typeJa: "区間準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "浅草", destEn: "Asakusa", cars: "6" },
+      { time: "20:25", typeJa: "普通", typeEn: "Local", badge: "badge-local", destJa: "北千住", destEn: "Kita-senju", cars: "7" }
     ];
 
-    // ★ APIからリアルタイム遅延情報を定期取得 ★
+    // ★ 3秒ごとに「日本語 ⇄ 英語」を切り替えるタイマー ★
+    setInterval(() => {
+      isEnglish = !isEnglish;
+      updateLanguageUI();
+      updateMonitor();
+    }, 3000);
+
+    function updateLanguageUI() {
+      // ヘッダー部分の日英切替
+      document.getElementById("hdr-dept").textContent = isEnglish ? "Departure time" : "発車時刻";
+      document.getElementById("hdr-train").textContent = isEnglish ? "Train" : "種別";
+      document.getElementById("hdr-to").textContent = isEnglish ? "To" : "行先";
+      document.getElementById("hdr-cars").textContent = isEnglish ? "Cars" : "両数";
+      
+      document.getElementById("m1-unit").textContent = isEnglish ? "Cars" : "両";
+      document.getElementById("m2-unit").textContent = isEnglish ? "Cars" : "両";
+      document.getElementById("m3-unit").textContent = isEnglish ? "Cars" : "両";
+
+      // 上部バー
+      document.getElementById("top-banner-text").textContent = isEnglish 
+        ? "for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan"
+        : "春日部・北千住・とうきょうスカイツリー・浅草・中目黒・渋谷・中央林間 方面";
+
+      // 妻通勤カード
+      document.getElementById("wife-card-title").textContent = isEnglish
+        ? "Commute: Transfer at Kuki ➔ JR Utsunomiya Line for Shiraoka"
+        : "通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続";
+
+      document.getElementById("st-tobu").textContent = isEnglish ? "Tobu-doubutsukoen Dep." : "東武動物公園 発";
+      document.getElementById("lbl-tobu-line").textContent = isEnglish ? "Tobu Isesaki Line" : "東武伊勢崎線";
+
+      document.getElementById("st-kuki").textContent = isEnglish ? "Kuki Sta. Transfer" : "久喜駅 乗り換え";
+      document.getElementById("lbl-jr-line").textContent = isEnglish ? "JR Line (for Omiya)" : "JR宇都宮線(大宮行)";
+
+      document.getElementById("st-shiraoka").textContent = isEnglish ? "Shiraoka Sta. Arrival" : "白岡駅 到着";
+      document.getElementById("lbl-shiraoka-arr").textContent = isEnglish ? "Est. Arrival" : "到着予定";
+    }
+
     async function checkRealtimeDelay() {
       try {
         const url = `https://api.odpt.org/api/v4/odpt:TrainInformation?odpt:operator=odpt.Operator:Tobu&acl:consumerKey=${ODPT_API_KEY}`;
@@ -372,34 +412,32 @@
         const boardEl = document.getElementById("main-board");
 
         if (isDelayed) {
-          // 遅延発生時の表示
           noticeEl.textContent = `【⚠️ 遅延発生】${delayMessage}`;
           noticeEl.className = "notice-bar has-delay";
           boardEl.className = "board-container is-delayed";
-          globalDelayMinutes = 5; // 自動で5分加算補正（APIの状況に応じて調整）
+          globalDelayMinutes = 5;
         } else {
-          // 平常運転時
-          noticeEl.textContent = "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
+          noticeEl.textContent = isEnglish 
+            ? "【Status】 Tobu Skytree Line / Isesaki Line: Normal Operation"
+            : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
           noticeEl.className = "notice-bar";
           boardEl.className = "board-container";
           globalDelayMinutes = 0;
         }
 
       } catch (e) {
-        console.warn("API取得エラー（ローカル動作継続）:", e);
+        console.warn("API Error:", e);
       }
     }
 
     function updateMonitor() {
       const now = new Date();
-      // 遅延分数を加味しない現在時刻
       const currentMin = now.getHours() * 60 + now.getMinutes();
       const currentSec = now.getSeconds();
 
-      // 1. 自分用の更新
       const upcomingMy = myRoutes.filter(r => {
         const [h, m] = r.time.split(":").map(Number);
-        const trainMin = h * 60 + m + globalDelayMinutes; // 遅延分を加算して判定
+        const trainMin = h * 60 + m + globalDelayMinutes;
         return trainMin > currentMin || (trainMin === currentMin && currentSec === 0);
       });
 
@@ -407,7 +445,6 @@
       setRowData("m2", upcomingMy[1]);
       setRowData("m3", upcomingMy[2]);
 
-      // 2. 妻通勤の更新
       const nextRoute = wifeRoutes.find(r => {
         const [h, m] = r.tobuDep.split(":").map(Number);
         const trainMin = h * 60 + m + globalDelayMinutes;
@@ -416,7 +453,9 @@
 
       if (nextRoute) {
         document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
-        document.getElementById("w-kuki-time").textContent = `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
+        document.getElementById("w-kuki-time").textContent = isEnglish 
+          ? `${nextRoute.kukiArr} Arr / ${nextRoute.jrDep} Dep`
+          : `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
         document.getElementById("w-shiraoka-time").textContent = nextRoute.shiraokaArr;
 
         const [h, m] = nextRoute.tobuDep.split(":").map(Number);
@@ -428,40 +467,32 @@
         const sec = diffSec % 60;
         const countdownEl = document.getElementById("wife-countdown");
 
-        if (globalDelayMinutes > 0) {
-          countdownEl.textContent = `約 ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')} (遅延補正)`;
-          countdownEl.style.color = "var(--delay-red)";
-        } else {
-          countdownEl.textContent = `あと ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-          countdownEl.style.color = "var(--ok-green)";
-        }
+        const prefixText = isEnglish ? "In " : "あと ";
+        countdownEl.textContent = `${prefixText}${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
       } else {
         document.getElementById("w-tobu-time").textContent = "--:--";
-        document.getElementById("w-kuki-time").textContent = "--:--着 / --:--発";
+        document.getElementById("w-kuki-time").textContent = "--:--";
         document.getElementById("w-shiraoka-time").textContent = "--:--";
-        document.getElementById("wife-countdown").textContent = "本日の運行終了";
+        document.getElementById("wife-countdown").textContent = isEnglish ? "End of Service" : "本日の運行終了";
       }
     }
 
     function setRowData(prefix, data) {
       if (data) {
         document.getElementById(`${prefix}-time`).textContent = data.time;
-        document.getElementById(`${prefix}-dest`).textContent = data.dest;
-        document.getElementById(`${prefix}-cars`).innerHTML = `${data.cars}<span class="cars-unit">Cars</span>`;
-        document.getElementById(`${prefix}-badge`).textContent = data.type;
+        document.getElementById(`${prefix}-dest`).textContent = isEnglish ? data.destEn : data.destJa;
+        document.getElementById(`${prefix}-cars`).innerHTML = `${data.cars}<span class="cars-unit">${isEnglish ? 'Cars' : '両'}</span>`;
+        document.getElementById(`${prefix}-badge`).textContent = isEnglish ? data.typeEn : data.typeJa;
         document.getElementById(`${prefix}-badge`).className = `train-badge ${data.badge}`;
       } else {
         document.getElementById(`${prefix}-time`).textContent = "--:--";
-        document.getElementById(`${prefix}-dest`).textContent = "終了";
-        document.getElementById(`${prefix}-cars`).innerHTML = `--<span class="cars-unit">Cars</span>`;
+        document.getElementById(`${prefix}-dest`).textContent = isEnglish ? "Terminated" : "終了";
+        document.getElementById(`${prefix}-cars`).innerHTML = `--<span class="cars-unit">${isEnglish ? 'Cars' : '両'}</span>`;
       }
     }
 
-    // 1分ごとにAPIを叩いて遅延情報をチェック
     checkRealtimeDelay();
     setInterval(checkRealtimeDelay, 60000);
-
-    // 1秒ごとにカウントダウン更新
     setInterval(updateMonitor, 1000);
     updateMonitor();
   </script>
