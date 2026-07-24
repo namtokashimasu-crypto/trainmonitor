@@ -50,7 +50,6 @@
       transition: border-color 0.5s;
     }
 
-    /* 遅延・異常時の赤枠パルスアニメーション */
     .board-container.is-delayed {
       border-color: var(--delay-red);
       animation: pulse-border 2s infinite;
@@ -192,7 +191,7 @@
 
     .cars-unit { font-size: 1.1rem; font-weight: normal; margin-left: 4px; }
 
-    /* 運行状況テロップバー */
+    /* ★ 運行状況テロップバー（スクロール改修） ★ */
     .notice-bar {
       background-color: #111;
       color: var(--ok-green);
@@ -206,9 +205,8 @@
       justify-content: center;
       padding: 0 15px;
       overflow: hidden;
+      position: relative;
       white-space: nowrap;
-      text-overflow: ellipsis;
-      transition: all 0.3s;
     }
 
     .notice-bar.has-delay {
@@ -216,6 +214,21 @@
       color: #ffffff;
       border-color: var(--delay-red);
       font-size: 1.25rem;
+    }
+
+    .notice-text-content {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .notice-text-content.scroll {
+      padding-left: 100%;
+      animation: marquee 18s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
 
     /* 下段マルチ接続カード */
@@ -356,9 +369,9 @@
       <div class="cars-info" id="m1-cars">--<span class="cars-unit" id="m1-unit">両</span></div>
     </div>
 
-    <!-- 運行状況テロップ -->
+    <!-- 運行状況テロップ（Inner Spanを追加） -->
     <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
+      <span class="notice-text-content" id="notice-content">【運行状況】東武線・JR宇都宮線：平常運転</span>
     </div>
 
     <!-- 次発 -->
@@ -437,31 +450,74 @@
     let realtimeDelayMessage = ""; 
     let isDelayedStatus = false;
 
-    // ODPT APIからリアルタイム運行情報を自動取得
+    // ODPT APIより「東武全線」＋「JR宇都宮線」の運行情報を一括取得
     async function checkRealtimeInfo() {
       try {
-        const url = `https://api.odpt.org/api/v4/odpt:TrainInformation?odpt:operator=odpt.Operator:Tobu&acl:consumerKey=${ODPT_API_KEY}`;
-        const res = await fetch(url);
-        const data = await res.json();
+        const tobuUrl = `https://api.odpt.org/api/v4/odpt:TrainInformation?odpt:operator=odpt.Operator:Tobu&acl:consumerKey=${ODPT_API_KEY}`;
+        const jrUrl = `https://api.odpt.org/api/v4/odpt:TrainInformation?odpt:operator=odpt.Operator:JR-East&acl:consumerKey=${ODPT_API_KEY}`;
 
-        let foundDelay = false;
-        let textJa = "";
+        const [tobuRes, jrRes] = await Promise.all([
+          fetch(tobuUrl).catch(() => null),
+          fetch(jrUrl).catch(() => null)
+        ]);
 
-        if (data && data.length > 0) {
-          for (let item of data) {
+        let delayMsgs = [];
+
+        if (tobuRes && tobuRes.ok) {
+          const tobuData = await tobuRes.json();
+          for (let item of tobuData) {
             const rawText = item["odpt:trainInformationText"] ? item["odpt:trainInformationText"].ja : "";
             if (rawText && !rawText.includes("平常")) {
-              foundDelay = true;
-              textJa = rawText;
+              delayMsgs.push(`【東武】${rawText}`);
               break;
             }
           }
         }
 
-        isDelayedStatus = foundDelay;
-        realtimeDelayMessage = textJa;
+        if (jrRes && jrRes.ok) {
+          const jrData = await jrRes.json();
+          for (let item of jrData) {
+            const railway = item["odpt:railway"] || "";
+            const rawText = item["odpt:trainInformationText"] ? item["odpt:trainInformationText"].ja : "";
+            const isUtsunomiya = railway.includes("Utsunomiya") || railway.includes("Tohoku") || rawText.includes("宇都宮線") || rawText.includes("東北本線");
+            
+            if (isUtsunomiya && rawText && !rawText.includes("平常")) {
+              delayMsgs.push(`【JR宇都宮線】${rawText}`);
+              break;
+            }
+          }
+        }
+
+        if (delayMsgs.length > 0) {
+          isDelayedStatus = true;
+          realtimeDelayMessage = delayMsgs.join(" ／ ");
+        } else {
+          isDelayedStatus = false;
+          realtimeDelayMessage = "";
+        }
       } catch (e) {
         console.warn("ODPT Realtime API Fetch Error:", e);
+      }
+    }
+
+    // テロップの長さに応じてスクロール判定を行う関数
+    function updateNoticeDisplay(text, isDelay) {
+      const noticeBar = document.getElementById("notice-text");
+      const noticeContent = document.getElementById("notice-content");
+      
+      noticeContent.textContent = text;
+
+      if (isDelay) {
+        noticeBar.className = "notice-bar has-delay";
+      } else {
+        noticeBar.className = "notice-bar";
+      }
+
+      // 枠幅を超えている場合はスクロールアニメーションを付与
+      if (noticeContent.offsetWidth > noticeBar.clientWidth - 30) {
+        noticeContent.classList.add("scroll");
+      } else {
+        noticeContent.classList.remove("scroll");
       }
     }
 
@@ -588,26 +644,20 @@
         });
       }
 
-      // 運行状況バーと外枠アニメーションの動的更新
-      const noticeEl = document.getElementById("notice-text");
       const boardContainer = document.getElementById("main-board");
 
       if (isDelayedStatus) {
-        noticeEl.className = "notice-bar has-delay";
-        noticeEl.textContent = `【⚠️遅延発生】${realtimeDelayMessage}`;
+        updateNoticeDisplay(`【⚠️遅延発生】${realtimeDelayMessage}`, true);
         boardContainer.classList.add("is-delayed");
       } else {
-        noticeEl.className = "notice-bar";
         boardContainer.classList.remove("is-delayed");
 
         if (upcomingUp.length === 0) {
-          noticeEl.textContent = isEnglish 
-            ? "【Notice】 End of today's train service."
-            : "【案内】本日の電車は終了いたしました。";
+          const endText = isEnglish ? "【Notice】 End of today's train service." : "【案内】本日の電車は終了いたしました。";
+          updateNoticeDisplay(endText, false);
         } else {
-          noticeEl.textContent = isEnglish
-            ? "【Status】 Tobu Skytree Line / Isesaki Line: Normal Operation"
-            : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
+          const okText = isEnglish ? "【Status】 Tobu Line / JR Utsunomiya Line: Normal Operation" : "【運行状況】東武線・JR宇都宮線：平常運転";
+          updateNoticeDisplay(okText, false);
         }
       }
 
@@ -629,7 +679,7 @@
         }
       }
 
-      // 2. 下段白岡接続カード更新
+      // 下段接続カード更新
       const countdownEl = document.getElementById("info-countdown");
       const lastConnMin = Math.max(...connections.map(r => timeToMinutes(r.tobuDep)));
       const connSwitchMin = lastConnMin + 10;
@@ -698,7 +748,7 @@
       document.getElementById(`${prefix}-badge`).className = "train-badge badge-end";
     }
 
-    // CSVマスターデータ（全便）
+    // CSVマスターデータ（省略なし全便）
     const weekdayUpTrains = [
       { time: "05:09", typeJa: "準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "長津田", destEn: "Nagatsuta", cars: "10" },
       { time: "05:19", typeJa: "準急", typeEn: "Semi Exp.", badge: "badge-semi", destJa: "中央林間", destEn: "Chuo-rinkan", cars: "10" },
@@ -1040,7 +1090,7 @@
 
     // 初期化ロード
     checkRealtimeInfo();
-    setInterval(checkRealtimeInfo, 60000); // 1分周期で運行状況を更新
+    setInterval(checkRealtimeInfo, 60000); // 1分周期で両社の運行状況を同時チェック
     setInterval(updateMonitor, 1000);
     updateMonitor();
   </script>
