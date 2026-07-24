@@ -15,9 +15,9 @@
       --text-yellow: #ffcc00;
       --text-orange: #ff9900;
       --text-gray: #aaaaaa;
-      --badge-express: #e6007e; /* 急行・区間急行ピンク */
-      --badge-local: #ffffff;   /* 普通ホワイト */
-      --badge-semi: #009944;    : 準急グリーン */
+      --badge-express: #e6007e;
+      --badge-local: #ffffff;
+      --badge-semi: #009944;
     }
 
     * { box-sizing: border-box; }
@@ -61,7 +61,7 @@
       font-weight: 900;
       padding: 2px 14px;
       border: 2px solid #fff;
-      border-right: 8px solid #f60; /* 東武オレンジ */
+      border-right: 8px solid #f60;
       margin-right: 15px;
       font-family: 'Chakra Petch', sans-serif;
     }
@@ -103,7 +103,7 @@
       line-height: 1;
     }
 
-    /* 種別バッジ（ピンク・白） */
+    /* 種別バッジ */
     .train-badge {
       display: inline-block;
       width: 85%;
@@ -139,7 +139,7 @@
       margin-left: 2px;
     }
 
-    /* 遅延・テロップ案内欄 */
+    /* 運行状況案内欄 */
     .notice-bar {
       background-color: #111;
       color: var(--text-yellow);
@@ -152,7 +152,7 @@
       letter-spacing: 1px;
     }
 
-    /* 日産化学通勤（久喜・白岡接続）専用カード */
+    /* 奥様通勤専用カード */
     .wife-section {
       background: #080c14;
       border: 2px solid #1c2d42;
@@ -180,32 +180,16 @@
       border-radius: 4px;
     }
 
-    .step-box {
-      text-align: center;
-    }
-
-    .step-station {
-      font-size: 0.8rem;
-      color: var(--text-gray);
-    }
-
+    .step-box { text-align: center; }
+    .step-station { font-size: 0.8rem; color: var(--text-gray); }
     .step-time {
       font-family: 'Chakra Petch', sans-serif;
       font-size: 1.8rem;
       font-weight: bold;
       color: var(--text-yellow);
     }
-
-    .step-label {
-      font-size: 0.9rem;
-      color: #fff;
-    }
-
-    .arrow {
-      color: var(--text-orange);
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+    .step-label { font-size: 0.9rem; color: #fff; }
+    .arrow { color: var(--text-orange); font-size: 1.5rem; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -220,7 +204,7 @@
       </div>
     </div>
 
-    <!-- 2. 東武線 発車標メインテーブル -->
+    <!-- 2. 発車標メインテーブル -->
     <div class="board-header">
       <div>Departure time</div>
       <div>Train</div>
@@ -230,7 +214,7 @@
 
     <!-- 先発 (1本目) -->
     <div class="board-row">
-      <div class="dept-time" id="m1-time">15:32</div>
+      <div class="dept-time" id="m1-time">--:--</div>
       <div><span class="train-badge badge-express" id="m1-badge">Express</span></div>
       <div class="destination" id="m1-dest">Chuo-rinkan</div>
       <div class="cars-info" id="m1-cars">10<span class="cars-unit">Cars</span></div>
@@ -243,7 +227,7 @@
 
     <!-- 次発 (2本目) -->
     <div class="board-row" style="padding: 6px 0;">
-      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">15:43</div>
+      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">--:--</div>
       <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">Local</span></div>
       <div class="destination" id="m2-dest" style="font-size: 1.6rem;">Naka-meguro</div>
       <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">7<span class="cars-unit">Cars</span></div>
@@ -251,7 +235,7 @@
 
     <!-- 次々発 (3本目) -->
     <div class="board-row" style="padding: 6px 0; border: none;">
-      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">15:51</div>
+      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">--:--</div>
       <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">Express</span></div>
       <div class="destination" id="m3-dest" style="font-size: 1.6rem;">Chuo-rinkan</div>
       <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">10<span class="cars-unit">Cars</span></div>
@@ -261,32 +245,29 @@
     <div class="wife-section">
       <div class="wife-header">
         <span>通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: #00ff66; font-family: monospace; font-size: 1.2rem;">あと 08:30</span>
+        <span id="wife-countdown" style="color: #00ff66; font-family: monospace; font-size: 1.2rem;">あと --:--</span>
       </div>
 
       <div class="wife-connection-flow">
-        <!-- 東武線発 -->
         <div class="step-box">
           <div class="step-station">東武動物公園 発</div>
-          <div class="step-time" id="w-tobu-time">07:18</div>
+          <div class="step-time" id="w-tobu-time">--:--</div>
           <div class="step-label">東武伊勢崎線</div>
         </div>
 
         <div class="arrow">➔</div>
 
-        <!-- 久喜着・発 -->
         <div class="step-box">
           <div class="step-station">久喜駅 乗り換え</div>
-          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">7:25着 / 7:32発</div>
+          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">--:--着 / --:--発</div>
           <div class="step-label">JR宇都宮線(大宮行)</div>
         </div>
 
         <div class="arrow">➔</div>
 
-        <!-- 白岡着 -->
         <div class="step-box">
           <div class="step-station">白岡駅 到着</div>
-          <div class="step-time" id="w-shiraoka-time" style="color: #00ff66;">07:36</div>
+          <div class="step-time" id="w-shiraoka-time" style="color: #00ff66;">--:--</div>
           <div class="step-label">到着予定</div>
         </div>
       </div>
@@ -296,911 +277,11 @@
 
   <script>
     // =========================================================================
-    // 【API設定】ご自身のODPT APIキーを入れてください
-    // =========================================================================
-    const ODPT_API_KEY = "<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>東武動物公園駅 発車案内ディスプレイ</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Noto+Sans+JP:wght@700;900&display=swap');
-
-    :root {
-      --bg-board: #000000;
-      --border-outer: #222222;
-      --header-bg: #111111;
-      --text-white: #ffffff;
-      --text-yellow: #ffcc00;
-      --text-orange: #ff9900;
-      --text-gray: #aaaaaa;
-      --badge-express: #e6007e; /* 急行・区間急行ピンク */
-      --badge-local: #ffffff;   /* 普通ホワイト */
-      --badge-semi: #009944;    : 準急グリーン */
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      background-color: #0d0d0d;
-      color: var(--text-white);
-      font-family: 'Noto Sans JP', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 15px;
-    }
-
-    /* 駅の液晶モニター風外枠 */
-    .board-container {
-      background-color: var(--bg-board);
-      width: 100%;
-      max-width: 900px;
-      border: 12px solid var(--border-outer);
-      border-radius: 8px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
-      padding: 15px 20px;
-    }
-
-    /* 上部ホーム番号＆方向案内 */
-    .top-banner {
-      display: flex;
-      align-items: center;
-      border-bottom: 2px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-    }
-
-    .platform-num {
-      background: linear-gradient(135deg, #111, #333);
-      color: #fff;
-      font-size: 2.2rem;
-      font-weight: 900;
-      padding: 2px 14px;
-      border: 2px solid #fff;
-      border-right: 8px solid #f60; /* 東武オレンジ */
-      margin-right: 15px;
-      font-family: 'Chakra Petch', sans-serif;
-    }
-
-    .banner-text {
-      font-size: 1.1rem;
-      color: #ddd;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    /* 発車標テーブル header */
-    .board-header {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      color: var(--text-gray);
-      font-size: 0.85rem;
-      border-bottom: 1px solid #444;
-      padding-bottom: 4px;
-      text-align: center;
-    }
-
-    /* 行データ */
-    .board-row {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #222;
-      text-align: center;
-    }
-
-    .dept-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 3.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-
-    /* 種別バッジ（ピンク・白） */
-    .train-badge {
-      display: inline-block;
-      width: 85%;
-      padding: 6px 0;
-      font-size: 1.3rem;
-      font-weight: 900;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    .badge-express { background-color: var(--badge-express); color: #fff; }
-    .badge-local { background-color: var(--badge-local); color: #000; }
-    .badge-semi { background-color: var(--badge-semi); color: #fff; }
-
-    .destination {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--text-white);
-      text-align: left;
-      padding-left: 10px;
-    }
-
-    .cars-info {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .cars-unit {
-      font-size: 0.9rem;
-      font-weight: normal;
-      margin-left: 2px;
-    }
-
-    /* 遅延・テロップ案内欄 */
-    .notice-bar {
-      background-color: #111;
-      color: var(--text-yellow);
-      border: 1px solid #333;
-      padding: 8px 15px;
-      margin: 15px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    /* 奥様通勤（久喜・白岡接続）専用カード */
-    .wife-section {
-      background: #080c14;
-      border: 2px solid #1c2d42;
-      border-radius: 6px;
-      padding: 12px 15px;
-      margin-top: 10px;
-    }
-
-    .wife-header {
-      color: var(--text-orange);
-      font-size: 1rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .wife-connection-flow {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #000;
-      border: 1px solid #333;
-      padding: 10px 15px;
-      border-radius: 4px;
-    }
-
-    .step-box {
-      text-align: center;
-    }
-
-    .step-station {
-      font-size: 0.8rem;
-      color: var(--text-gray);
-    }
-
-    .step-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: var(--text-yellow);
-    }
-
-    .step-label {
-      font-size: 0.9rem;
-      color: #fff;
-    }
-
-    .arrow {
-      color: var(--text-orange);
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="board-container">
-    
-    <!-- 1. 上部案内バー -->
-    <div class="top-banner">
-      <div class="platform-num">2</div>
-      <div class="banner-text">
-        for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan
-      </div>
-    </div>
-
-    <!-- 2. 東武線 発車標メインテーブル -->
-    <div class="board-header">
-      <div>Departure time</div>
-      <div>Train</div>
-      <div style="text-align: left; padding-left: 10px;">To</div>
-      <div>Cars</div>
-    </div>
-
-    <!-- 先発 (1本目) -->
-    <div class="board-row">
-      <div class="dept-time" id="m1-time">15:32</div>
-      <div><span class="train-badge badge-express" id="m1-badge">Express</span></div>
-      <div class="destination" id="m1-dest">Chuo-rinkan</div>
-      <div class="cars-info" id="m1-cars">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- テロップ・運行状況表示 -->
-    <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
-    </div>
-
-    <!-- 次発 (2本目) -->
-    <div class="board-row" style="padding: 6px 0;">
-      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">15:43</div>
-      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">Local</span></div>
-      <div class="destination" id="m2-dest" style="font-size: 1.6rem;">Naka-meguro</div>
-      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">7<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 次々発 (3本目) -->
-    <div class="board-row" style="padding: 6px 0; border: none;">
-      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">15:51</div>
-      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">Express</span></div>
-      <div class="destination" id="m3-dest" style="font-size: 1.6rem;">Chuo-rinkan</div>
-      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 3. 奥様通勤：久喜乗り換え＆白岡到着 案内カード -->
-    <div class="wife-section">
-      <div class="wife-header">
-        <span>妻通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: #00ff66; font-family: monospace; font-size: 1.2rem;">あと 08:30</span>
-      </div>
-
-      <div class="wife-connection-flow">
-        <!-- 東武線発 -->
-        <div class="step-box">
-          <div class="step-station">東武動物公園 発</div>
-          <div class="step-time" id="w-tobu-time">07:18</div>
-          <div class="step-label">東武伊勢崎線</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 久喜着・発 -->
-        <div class="step-box">
-          <div class="step-station">久喜駅 乗り換え</div>
-          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">7:25着 / 7:32発</div>
-          <div class="step-label">JR宇都宮線(大宮行)</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 白岡着 -->
-        <div class="step-box">
-          <div class="step-station">白岡駅 到着</div>
-          <div class="step-time" id="w-shiraoka-time" style="color: #00ff66;">07:36</div>
-          <div class="step-label">到着予定</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    // =========================================================================
-    // 【API設定】ご自身のODPT APIキーを入れてください
-    // =========================================================================
-    const ODPT_API_KEY = "<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>東武動物公園駅 発車案内ディスプレイ</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Noto+Sans+JP:wght@700;900&display=swap');
-
-    :root {
-      --bg-board: #000000;
-      --border-outer: #222222;
-      --header-bg: #111111;
-      --text-white: #ffffff;
-      --text-yellow: #ffcc00;
-      --text-orange: #ff9900;
-      --text-gray: #aaaaaa;
-      --badge-express: #e6007e; /* 急行・区間急行ピンク */
-      --badge-local: #ffffff;   /* 普通ホワイト */
-      --badge-semi: #009944;    : 準急グリーン */
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      background-color: #0d0d0d;
-      color: var(--text-white);
-      font-family: 'Noto Sans JP', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 15px;
-    }
-
-    /* 駅の液晶モニター風外枠 */
-    .board-container {
-      background-color: var(--bg-board);
-      width: 100%;
-      max-width: 900px;
-      border: 12px solid var(--border-outer);
-      border-radius: 8px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
-      padding: 15px 20px;
-    }
-
-    /* 上部ホーム番号＆方向案内 */
-    .top-banner {
-      display: flex;
-      align-items: center;
-      border-bottom: 2px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-    }
-
-    .platform-num {
-      background: linear-gradient(135deg, #111, #333);
-      color: #fff;
-      font-size: 2.2rem;
-      font-weight: 900;
-      padding: 2px 14px;
-      border: 2px solid #fff;
-      border-right: 8px solid #f60; /* 東武オレンジ */
-      margin-right: 15px;
-      font-family: 'Chakra Petch', sans-serif;
-    }
-
-    .banner-text {
-      font-size: 1.1rem;
-      color: #ddd;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    /* 発車標テーブル header */
-    .board-header {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      color: var(--text-gray);
-      font-size: 0.85rem;
-      border-bottom: 1px solid #444;
-      padding-bottom: 4px;
-      text-align: center;
-    }
-
-    /* 行データ */
-    .board-row {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #222;
-      text-align: center;
-    }
-
-    .dept-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 3.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-
-    /* 種別バッジ（ピンク・白） */
-    .train-badge {
-      display: inline-block;
-      width: 85%;
-      padding: 6px 0;
-      font-size: 1.3rem;
-      font-weight: 900;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    .badge-express { background-color: var(--badge-express); color: #fff; }
-    .badge-local { background-color: var(--badge-local); color: #000; }
-    .badge-semi { background-color: var(--badge-semi); color: #fff; }
-
-    .destination {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--text-white);
-      text-align: left;
-      padding-left: 10px;
-    }
-
-    .cars-info {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .cars-unit {
-      font-size: 0.9rem;
-      font-weight: normal;
-      margin-left: 2px;
-    }
-
-    /* 遅延・テロップ案内欄 */
-    .notice-bar {
-      background-color: #111;
-      color: var(--text-yellow);
-      border: 1px solid #333;
-      padding: 8px 15px;
-      margin: 15px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    /* 奥様通勤（久喜・白岡接続）専用カード */
-    .wife-section {
-      background: #080c14;
-      border: 2px solid #1c2d42;
-      border-radius: 6px;
-      padding: 12px 15px;
-      margin-top: 10px;
-    }
-
-    .wife-header {
-      color: var(--text-orange);
-      font-size: 1rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .wife-connection-flow {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #000;
-      border: 1px solid #333;
-      padding: 10px 15px;
-      border-radius: 4px;
-    }
-
-    .step-box {
-      text-align: center;
-    }
-
-    .step-station {
-      font-size: 0.8rem;
-      color: var(--text-gray);
-    }
-
-    .step-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: var(--text-yellow);
-    }
-
-    .step-label {
-      font-size: 0.9rem;
-      color: #fff;
-    }
-
-    .arrow {
-      color: var(--text-orange);
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="board-container">
-    
-    <!-- 1. 上部案内バー -->
-    <div class="top-banner">
-      <div class="platform-num">2</div>
-      <div class="banner-text">
-        for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan
-      </div>
-    </div>
-
-    <!-- 2. 東武線 発車標メインテーブル -->
-    <div class="board-header">
-      <div>Departure time</div>
-      <div>Train</div>
-      <div style="text-align: left; padding-left: 10px;">To</div>
-      <div>Cars</div>
-    </div>
-
-    <!-- 先発 (1本目) -->
-    <div class="board-row">
-      <div class="dept-time" id="m1-time">15:32</div>
-      <div><span class="train-badge badge-express" id="m1-badge">Express</span></div>
-      <div class="destination" id="m1-dest">Chuo-rinkan</div>
-      <div class="cars-info" id="m1-cars">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- テロップ・運行状況表示 -->
-    <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
-    </div>
-
-    <!-- 次発 (2本目) -->
-    <div class="board-row" style="padding: 6px 0;">
-      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">15:43</div>
-      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">Local</span></div>
-      <div class="destination" id="m2-dest" style="font-size: 1.6rem;">Naka-meguro</div>
-      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">7<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 次々発 (3本目) -->
-    <div class="board-row" style="padding: 6px 0; border: none;">
-      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">15:51</div>
-      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">Express</span></div>
-      <div class="destination" id="m3-dest" style="font-size: 1.6rem;">Chuo-rinkan</div>
-      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 3. 奥様通勤：久喜乗り換え＆白岡到着 案内カード -->
-    <div class="wife-section">
-      <div class="wife-header">
-        <span>妻通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: #00ff66; font-family: monospace; font-size: 1.2rem;">あと 08:30</span>
-      </div>
-
-      <div class="wife-connection-flow">
-        <!-- 東武線発 -->
-        <div class="step-box">
-          <div class="step-station">東武動物公園 発</div>
-          <div class="step-time" id="w-tobu-time">07:18</div>
-          <div class="step-label">東武伊勢崎線</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 久喜着・発 -->
-        <div class="step-box">
-          <div class="step-station">久喜駅 乗り換え</div>
-          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">7:25着 / 7:32発</div>
-          <div class="step-label">JR宇都宮線(大宮行)</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 白岡着 -->
-        <div class="step-box">
-          <div class="step-station">白岡駅 到着</div>
-          <div class="step-time" id="w-shiraoka-time" style="color: #00ff66;">07:36</div>
-          <div class="step-label">到着予定</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    // =========================================================================
-    // 【API設定】ご自身のODPT APIキーを入れてください
-    // =========================================================================
-    const ODPT_API_KEY = "<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>東武動物公園駅 発車案内ディスプレイ</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&family=Noto+Sans+JP:wght@700;900&display=swap');
-
-    :root {
-      --bg-board: #000000;
-      --border-outer: #222222;
-      --header-bg: #111111;
-      --text-white: #ffffff;
-      --text-yellow: #ffcc00;
-      --text-orange: #ff9900;
-      --text-gray: #aaaaaa;
-      --badge-express: #e6007e; /* 急行・区間急行ピンク */
-      --badge-local: #ffffff;   /* 普通ホワイト */
-      --badge-semi: #009944;    : 準急グリーン */
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      background-color: #0d0d0d;
-      color: var(--text-white);
-      font-family: 'Noto Sans JP', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 15px;
-    }
-
-    /* 駅の液晶モニター風外枠 */
-    .board-container {
-      background-color: var(--bg-board);
-      width: 100%;
-      max-width: 900px;
-      border: 12px solid var(--border-outer);
-      border-radius: 8px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
-      padding: 15px 20px;
-    }
-
-    /* 上部ホーム番号＆方向案内 */
-    .top-banner {
-      display: flex;
-      align-items: center;
-      border-bottom: 2px solid #333;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-    }
-
-    .platform-num {
-      background: linear-gradient(135deg, #111, #333);
-      color: #fff;
-      font-size: 2.2rem;
-      font-weight: 900;
-      padding: 2px 14px;
-      border: 2px solid #fff;
-      border-right: 8px solid #f60; /* 東武オレンジ */
-      margin-right: 15px;
-      font-family: 'Chakra Petch', sans-serif;
-    }
-
-    .banner-text {
-      font-size: 1.1rem;
-      color: #ddd;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    /* 発車標テーブル header */
-    .board-header {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      color: var(--text-gray);
-      font-size: 0.85rem;
-      border-bottom: 1px solid #444;
-      padding-bottom: 4px;
-      text-align: center;
-    }
-
-    /* 行データ */
-    .board-row {
-      display: grid;
-      grid-template-columns: 1.8fr 1.8fr 3fr 1.2fr;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #222;
-      text-align: center;
-    }
-
-    .dept-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 3.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-
-    /* 種別バッジ（ピンク・白） */
-    .train-badge {
-      display: inline-block;
-      width: 85%;
-      padding: 6px 0;
-      font-size: 1.3rem;
-      font-weight: 900;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    .badge-express { background-color: var(--badge-express); color: #fff; }
-    .badge-local { background-color: var(--badge-local); color: #000; }
-    .badge-semi { background-color: var(--badge-semi); color: #fff; }
-
-    .destination {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--text-white);
-      text-align: left;
-      padding-left: 10px;
-    }
-
-    .cars-info {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .cars-unit {
-      font-size: 0.9rem;
-      font-weight: normal;
-      margin-left: 2px;
-    }
-
-    /* 遅延・テロップ案内欄 */
-    .notice-bar {
-      background-color: #111;
-      color: var(--text-yellow);
-      border: 1px solid #333;
-      padding: 8px 15px;
-      margin: 15px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    /* 奥様通勤（久喜・白岡接続）専用カード */
-    .wife-section {
-      background: #080c14;
-      border: 2px solid #1c2d42;
-      border-radius: 6px;
-      padding: 12px 15px;
-      margin-top: 10px;
-    }
-
-    .wife-header {
-      color: var(--text-orange);
-      font-size: 1rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .wife-connection-flow {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #000;
-      border: 1px solid #333;
-      padding: 10px 15px;
-      border-radius: 4px;
-    }
-
-    .step-box {
-      text-align: center;
-    }
-
-    .step-station {
-      font-size: 0.8rem;
-      color: var(--text-gray);
-    }
-
-    .step-time {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: var(--text-yellow);
-    }
-
-    .step-label {
-      font-size: 0.9rem;
-      color: #fff;
-    }
-
-    .arrow {
-      color: var(--text-orange);
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="board-container">
-    
-    <!-- 1. 上部案内バー -->
-    <div class="top-banner">
-      <div class="platform-num">2</div>
-      <div class="banner-text">
-        for Kasukabe, Kita-senju, TOKYO SKYTREE, Asakusa, Naka-meguro, Shibuya, Chuo-rinkan
-      </div>
-    </div>
-
-    <!-- 2. 東武線 発車標メインテーブル -->
-    <div class="board-header">
-      <div>Departure time</div>
-      <div>Train</div>
-      <div style="text-align: left; padding-left: 10px;">To</div>
-      <div>Cars</div>
-    </div>
-
-    <!-- 先発 (1本目) -->
-    <div class="board-row">
-      <div class="dept-time" id="m1-time">15:32</div>
-      <div><span class="train-badge badge-express" id="m1-badge">Express</span></div>
-      <div class="destination" id="m1-dest">Chuo-rinkan</div>
-      <div class="cars-info" id="m1-cars">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- テロップ・運行状況表示 -->
-    <div class="notice-bar" id="notice-text">
-      【運行状況】東武スカイツリーライン・伊勢崎線：平常運転
-    </div>
-
-    <!-- 次発 (2本目) -->
-    <div class="board-row" style="padding: 6px 0;">
-      <div class="dept-time" id="m2-time" style="font-size: 2.5rem;">15:43</div>
-      <div><span class="train-badge badge-local" id="m2-badge" style="font-size: 1.1rem;">Local</span></div>
-      <div class="destination" id="m2-dest" style="font-size: 1.6rem;">Naka-meguro</div>
-      <div class="cars-info" id="m2-cars" style="font-size: 1.8rem;">7<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 次々発 (3本目) -->
-    <div class="board-row" style="padding: 6px 0; border: none;">
-      <div class="dept-time" id="m3-time" style="font-size: 2.5rem;">15:51</div>
-      <div><span class="train-badge badge-express" id="m3-badge" style="font-size: 1.1rem;">Express</span></div>
-      <div class="destination" id="m3-dest" style="font-size: 1.6rem;">Chuo-rinkan</div>
-      <div class="cars-info" id="m3-cars" style="font-size: 1.8rem;">10<span class="cars-unit">Cars</span></div>
-    </div>
-
-    <!-- 3. 奥様通勤：久喜乗り換え＆白岡到着 案内カード -->
-    <div class="wife-section">
-      <div class="wife-header">
-        <span>妻通勤：久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
-        <span id="wife-countdown" style="color: #00ff66; font-family: monospace; font-size: 1.2rem;">あと 08:30</span>
-      </div>
-
-      <div class="wife-connection-flow">
-        <!-- 東武線発 -->
-        <div class="step-box">
-          <div class="step-station">東武動物公園 発</div>
-          <div class="step-time" id="w-tobu-time">07:18</div>
-          <div class="step-label">東武伊勢崎線</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 久喜着・発 -->
-        <div class="step-box">
-          <div class="step-station">久喜駅 乗り換え</div>
-          <div class="step-time" id="w-kuki-time" style="color: #ff9900;">7:25着 / 7:32発</div>
-          <div class="step-label">JR宇都宮線(大宮行)</div>
-        </div>
-
-        <div class="arrow">➔</div>
-
-        <!-- 白岡着 -->
-        <div class="step-box">
-          <div class="step-station">白岡駅 到着</div>
-          <div class="step-time" id="w-shiraoka-time" style="color: #00ff66;">07:36</div>
-          <div class="step-label">到着予定</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    // =========================================================================
-    // 【API設定】ご自身のODPT APIキーを入れてください
+    // 【設定】APIキーを入れる場合はここに貼り付けてください
     // =========================================================================
     const ODPT_API_KEY = "c7im4fjqeajwpurz9a295jbpdctk5q3mw9orll1m0hgbm9t016vrfvtpftebkhln";
 
-    // 久喜・白岡乗り換えダイヤ参照テーブル（妻通勤用データ）
+    // 妻通勤用乗り換えダイヤテーブル
     const wifeRoutes = [
       { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
       { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
@@ -1209,12 +290,51 @@
       { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" }
     ];
 
-    // 更新ロジック
-    function updateWifeSection() {
+    // 自分用全時間帯主要ダイヤ
+    const myRoutes = [
+      { time: "07:02", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
+      { time: "07:08", type: "Local", badge: "badge-local", dest: "Naka-meguro", cars: "7" },
+      { time: "07:14", type: "Semi Exp.", badge: "badge-semi", dest: "Asakusa", cars: "6" },
+      { time: "07:21", type: "Express", badge: "badge-express", dest: "Nagatsuta", cars: "10" },
+      { time: "07:35", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
+      { time: "07:50", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" },
+      { time: "08:04", type: "Express", badge: "badge-express", dest: "Chuo-rinkan", cars: "10" }
+    ];
+
+    function updateMonitor() {
       const now = new Date();
       const currentMin = now.getHours() * 60 + now.getMinutes();
       const currentSec = now.getSeconds();
 
+      // 1. 自分用の更新（先発・次発・次々発）
+      const upcomingMy = myRoutes.filter(r => {
+        const [h, m] = r.time.split(":").map(Number);
+        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
+      });
+
+      if (upcomingMy.length > 0) {
+        document.getElementById("m1-time").textContent = upcomingMy[0].time;
+        document.getElementById("m1-dest").textContent = upcomingMy[0].dest;
+        document.getElementById("m1-cars").innerHTML = `${upcomingMy[0].cars}<span class="cars-unit">Cars</span>`;
+        document.getElementById("m1-badge").textContent = upcomingMy[0].type;
+        document.getElementById("m1-badge").className = `train-badge ${upcomingMy[0].badge}`;
+      }
+      if (upcomingMy.length > 1) {
+        document.getElementById("m2-time").textContent = upcomingMy[1].time;
+        document.getElementById("m2-dest").textContent = upcomingMy[1].dest;
+        document.getElementById("m2-cars").innerHTML = `${upcomingMy[1].cars}<span class="cars-unit">Cars</span>`;
+        document.getElementById("m2-badge").textContent = upcomingMy[1].type;
+        document.getElementById("m2-badge").className = `train-badge ${upcomingMy[1].badge}`;
+      }
+      if (upcomingMy.length > 2) {
+        document.getElementById("m3-time").textContent = upcomingMy[2].time;
+        document.getElementById("m3-dest").textContent = upcomingMy[2].dest;
+        document.getElementById("m3-cars").innerHTML = `${upcomingMy[2].cars}<span class="cars-unit">Cars</span>`;
+        document.getElementById("m3-badge").textContent = upcomingMy[2].type;
+        document.getElementById("m3-badge").className = `train-badge ${upcomingMy[2].badge}`;
+      }
+
+      // 2. 妻通勤の更新
       const nextRoute = wifeRoutes.find(r => {
         const [h, m] = r.tobuDep.split(":").map(Number);
         return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
@@ -1233,125 +353,8 @@
       }
     }
 
-    setInterval(updateWifeSection, 1000);
-    updateWifeSection();
-  </script>
-</body>
-</html>";
-
-    // 久喜・白岡乗り換えダイヤ参照テーブル（妻通勤用データ）
-    const wifeRoutes = [
-      { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
-      { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
-      { tobuDep: "07:32", kukiArr: "07:39", jrDep: "07:46", shiraokaArr: "07:50" },
-      { tobuDep: "07:47", kukiArr: "07:54", jrDep: "08:02", shiraokaArr: "08:06" },
-      { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" }
-    ];
-
-    // 更新ロジック
-    function updateWifeSection() {
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-      const currentSec = now.getSeconds();
-
-      const nextRoute = wifeRoutes.find(r => {
-        const [h, m] = r.tobuDep.split(":").map(Number);
-        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
-      });
-
-      if (nextRoute) {
-        document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
-        document.getElementById("w-kuki-time").textContent = `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
-        document.getElementById("w-shiraoka-time").textContent = nextRoute.shiraokaArr;
-
-        const [h, m] = nextRoute.tobuDep.split(":").map(Number);
-        const diffSec = ((h * 60 + m) * 60) - (currentMin * 60 + currentSec);
-        const min = Math.floor(diffSec / 60);
-        const sec = diffSec % 60;
-        document.getElementById("wife-countdown").textContent = `あと ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      }
-    }
-
-    setInterval(updateWifeSection, 1000);
-    updateWifeSection();
-  </script>
-</body>
-</html>";
-
-    // 久喜・白岡乗り換えダイヤ参照テーブル（妻通勤用データ）
-    const wifeRoutes = [
-      { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
-      { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
-      { tobuDep: "07:32", kukiArr: "07:39", jrDep: "07:46", shiraokaArr: "07:50" },
-      { tobuDep: "07:47", kukiArr: "07:54", jrDep: "08:02", shiraokaArr: "08:06" },
-      { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" }
-    ];
-
-    // 更新ロジック
-    function updateWifeSection() {
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-      const currentSec = now.getSeconds();
-
-      const nextRoute = wifeRoutes.find(r => {
-        const [h, m] = r.tobuDep.split(":").map(Number);
-        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
-      });
-
-      if (nextRoute) {
-        document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
-        document.getElementById("w-kuki-time").textContent = `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
-        document.getElementById("w-shiraoka-time").textContent = nextRoute.shiraokaArr;
-
-        const [h, m] = nextRoute.tobuDep.split(":").map(Number);
-        const diffSec = ((h * 60 + m) * 60) - (currentMin * 60 + currentSec);
-        const min = Math.floor(diffSec / 60);
-        const sec = diffSec % 60;
-        document.getElementById("wife-countdown").textContent = `あと ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      }
-    }
-
-    setInterval(updateWifeSection, 1000);
-    updateWifeSection();
-  </script>
-</body>
-</html>";
-
-    // 久喜・白岡乗り換えダイヤ参照テーブル（妻通勤用データ）
-    const wifeRoutes = [
-      { tobuDep: "07:05", kukiArr: "07:12", jrDep: "07:18", shiraokaArr: "07:22" },
-      { tobuDep: "07:18", kukiArr: "07:25", jrDep: "07:32", shiraokaArr: "07:36" },
-      { tobuDep: "07:32", kukiArr: "07:39", jrDep: "07:46", shiraokaArr: "07:50" },
-      { tobuDep: "07:47", kukiArr: "07:54", jrDep: "08:02", shiraokaArr: "08:06" },
-      { tobuDep: "08:02", kukiArr: "08:09", jrDep: "08:16", shiraokaArr: "08:20" }
-    ];
-
-    // 更新ロジック
-    function updateWifeSection() {
-      const now = new Date();
-      const currentMin = now.getHours() * 60 + now.getMinutes();
-      const currentSec = now.getSeconds();
-
-      const nextRoute = wifeRoutes.find(r => {
-        const [h, m] = r.tobuDep.split(":").map(Number);
-        return (h * 60 + m) > currentMin || ((h * 60 + m) === currentMin && currentSec === 0);
-      });
-
-      if (nextRoute) {
-        document.getElementById("w-tobu-time").textContent = nextRoute.tobuDep;
-        document.getElementById("w-kuki-time").textContent = `${nextRoute.kukiArr}着 / ${nextRoute.jrDep}発`;
-        document.getElementById("w-shiraoka-time").textContent = nextRoute.shiraokaArr;
-
-        const [h, m] = nextRoute.tobuDep.split(":").map(Number);
-        const diffSec = ((h * 60 + m) * 60) - (currentMin * 60 + currentSec);
-        const min = Math.floor(diffSec / 60);
-        const sec = diffSec % 60;
-        document.getElementById("wife-countdown").textContent = `あと ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      }
-    }
-
-    setInterval(updateWifeSection, 1000);
-    updateWifeSection();
+    setInterval(updateMonitor, 1000);
+    updateMonitor();
   </script>
 </body>
 </html>
