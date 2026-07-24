@@ -47,6 +47,19 @@
       padding: 20px;
       overflow: hidden;
       position: relative;
+      transition: border-color 0.5s;
+    }
+
+    /* 遅延・異常時の赤枠パルスアニメーション */
+    .board-container.is-delayed {
+      border-color: var(--delay-red);
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0% { border-color: #ff3333; }
+      50% { border-color: #660000; }
+      100% { border-color: #ff3333; }
     }
 
     /* 上部ホーム案内 */
@@ -191,6 +204,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0 15px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition: all 0.3s;
+    }
+
+    .notice-bar.has-delay {
+      background-color: #4a0000;
+      color: #ffffff;
+      border-color: var(--delay-red);
+      font-size: 1.25rem;
     }
 
     /* 下段マルチ接続カード */
@@ -403,10 +428,42 @@
   </div>
 
   <script>
+    const ODPT_API_KEY = "c7im4fjqeajwpurz9a295jbpdctk5q3mw9orll1m0hgbm9t016vrfvtpftebkhln";
+
     let isEnglish = false;
     let audioEnabled = false;
     let audioCtx = null;
     let lastChimeTime = "";
+    let realtimeDelayMessage = ""; 
+    let isDelayedStatus = false;
+
+    // ODPT APIからリアルタイム運行情報を自動取得
+    async function checkRealtimeInfo() {
+      try {
+        const url = `https://api.odpt.org/api/v4/odpt:TrainInformation?odpt:operator=odpt.Operator:Tobu&acl:consumerKey=${ODPT_API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        let foundDelay = false;
+        let textJa = "";
+
+        if (data && data.length > 0) {
+          for (let item of data) {
+            const rawText = item["odpt:trainInformationText"] ? item["odpt:trainInformationText"].ja : "";
+            if (rawText && !rawText.includes("平常")) {
+              foundDelay = true;
+              textJa = rawText;
+              break;
+            }
+          }
+        }
+
+        isDelayedStatus = foundDelay;
+        realtimeDelayMessage = textJa;
+      } catch (e) {
+        console.warn("ODPT Realtime API Fetch Error:", e);
+      }
+    }
 
     function playChime() {
       if (!audioEnabled) return;
@@ -501,7 +558,7 @@
       if (!timeStr || timeStr === "---") return 9999;
       const [h, m] = timeStr.split(":").map(Number);
       let mins = h * 60 + m;
-      if (h < 4) mins += 1440; // 深夜24時台対応
+      if (h < 4) mins += 1440;
       return mins;
     }
 
@@ -531,16 +588,32 @@
         });
       }
 
+      // 運行状況バーと外枠アニメーションの動的更新
+      const noticeEl = document.getElementById("notice-text");
+      const boardContainer = document.getElementById("main-board");
+
+      if (isDelayedStatus) {
+        noticeEl.className = "notice-bar has-delay";
+        noticeEl.textContent = `【⚠️遅延発生】${realtimeDelayMessage}`;
+        boardContainer.classList.add("is-delayed");
+      } else {
+        noticeEl.className = "notice-bar";
+        boardContainer.classList.remove("is-delayed");
+
+        if (upcomingUp.length === 0) {
+          noticeEl.textContent = isEnglish 
+            ? "【Notice】 End of today's train service."
+            : "【案内】本日の電車は終了いたしました。";
+        } else {
+          noticeEl.textContent = isEnglish
+            ? "【Status】 Tobu Skytree Line / Isesaki Line: Normal Operation"
+            : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
+        }
+      }
+
       if (upcomingUp.length === 0) {
-        document.getElementById("notice-text").textContent = isEnglish 
-          ? "【Notice】 End of today's train service."
-          : "【案内】本日の電車は終了いたしました。";
         setRowDataFinished("m1"); setRowDataFinished("m2"); setRowDataFinished("m3");
       } else {
-        document.getElementById("notice-text").textContent = isEnglish
-          ? "【Status】 Tobu Skytree Line / Isesaki Line: Normal Operation"
-          : "【運行状況】東武スカイツリーライン・伊勢崎線：平常運転";
-
         setRowData("m1", upcomingUp[0]);
         setRowData("m2", upcomingUp[1]);
         setRowData("m3", upcomingUp[2]);
@@ -556,7 +629,7 @@
         }
       }
 
-      // 2. 下段白岡接続カード更新（日付跨ぎ計算補正）
+      // 2. 下段白岡接続カード更新
       const countdownEl = document.getElementById("info-countdown");
       const lastConnMin = Math.max(...connections.map(r => timeToMinutes(r.tobuDep)));
       const connSwitchMin = lastConnMin + 10;
@@ -588,13 +661,10 @@
         document.getElementById("dest-arr-time").textContent = nextConn.shiraokaArr;
 
         let trainMin = timeToMinutes(nextConn.tobuDep);
-        // ★ 翌朝の始発を表示している場合は24時間分（1440分）を加えてマイナス化を防止！
-        if (isNextDayConn && trainMin < currentMin) {
-          trainMin += 1440;
-        }
+        if (isNextDayConn && trainMin < currentMin) trainMin += 1440;
 
         let diffSec = (trainMin * 60) - (currentMin * 60 + currentSec);
-        if (diffSec < 0) diffSec = 0; // マイナス安全ガード
+        if (diffSec < 0) diffSec = 0;
 
         const minVal = Math.floor(diffSec / 60);
         const secVal = diffSec % 60;
@@ -968,6 +1038,9 @@
       { tobuDep: "23:55", kukiArr: "00:02", jrDep: "---", jrType: "", jrDest: "", shiraokaArr: "当日接続なし" }
     ];
 
+    // 初期化ロード
+    checkRealtimeInfo();
+    setInterval(checkRealtimeInfo, 60000); // 1分周期で運行状況を更新
     setInterval(updateMonitor, 1000);
     updateMonitor();
   </script>
