@@ -501,7 +501,7 @@
       if (!timeStr || timeStr === "---") return 9999;
       const [h, m] = timeStr.split(":").map(Number);
       let mins = h * 60 + m;
-      if (h < 4) mins += 1440; // 深夜24時台
+      if (h < 4) mins += 1440; // 深夜24時台対応
       return mins;
     }
 
@@ -515,15 +515,15 @@
 
       const { upTrains, connections } = getTodayDatasets();
 
-      // 当日の最終列車時刻（分）を取得
       const lastTrainMin = Math.max(...upTrains.map(r => timeToMinutes(r.time)));
-      const switchMin = lastTrainMin + 10; // ★ 最終列車10分後に切り替え
+      const switchMin = lastTrainMin + 10;
 
       let upcomingUp = [];
+      let isNextDayTrain = false;
 
       if (currentMin > switchMin) {
-        // ★ 最終列車の10分後を過ぎた場合：自動で「翌朝の始発」を表示！
         upcomingUp = upTrains.slice(0, 3);
+        isNextDayTrain = true;
       } else {
         upcomingUp = upTrains.filter(r => {
           const trainMin = timeToMinutes(r.time);
@@ -532,7 +532,6 @@
       }
 
       if (upcomingUp.length === 0) {
-        // ★ 最終列車〜10分後までの間のみ「運転終了」を表示
         document.getElementById("notice-text").textContent = isEnglish 
           ? "【Notice】 End of today's train service."
           : "【案内】本日の電車は終了いたしました。";
@@ -546,9 +545,9 @@
         setRowData("m2", upcomingUp[1]);
         setRowData("m3", upcomingUp[2]);
 
-        // 10秒前チャイム判定
         const nextTrain = upcomingUp[0];
-        const trainMin = timeToMinutes(nextTrain.time);
+        let trainMin = timeToMinutes(nextTrain.time);
+        if (isNextDayTrain && trainMin < currentMin) trainMin += 1440;
         const diffSec = (trainMin * 60) - (currentMin * 60 + currentSec);
 
         if (diffSec === 10 && lastChimeTime !== nextTrain.time) {
@@ -557,15 +556,17 @@
         }
       }
 
-      // 2. 下段白岡接続カード更新（接続側も10分後切り替え対応）
+      // 2. 下段白岡接続カード更新（日付跨ぎ計算補正）
       const countdownEl = document.getElementById("info-countdown");
       const lastConnMin = Math.max(...connections.map(r => timeToMinutes(r.tobuDep)));
       const connSwitchMin = lastConnMin + 10;
 
       let nextConn = null;
+      let isNextDayConn = false;
+
       if (currentMin > connSwitchMin) {
-        // ★ 最終接続の10分後を過ぎた場合：翌朝最初の接続を表示
         nextConn = connections[0];
+        isNextDayConn = true;
       } else {
         nextConn = connections.find(r => {
           const trainMin = timeToMinutes(r.tobuDep);
@@ -586,9 +587,18 @@
         document.getElementById("lbl-transfer-info").textContent = labelText;
         document.getElementById("dest-arr-time").textContent = nextConn.shiraokaArr;
 
-        const trainMin = timeToMinutes(nextConn.tobuDep);
-        const diffSec = (trainMin * 60) - (currentMin * 60 + currentSec);
-        countdownEl.textContent = `${isEnglish ? "In " : "あと "}${String(Math.floor(diffSec/60)).padStart(2,'0')}:${String(diffSec%60).padStart(2,'0')}`;
+        let trainMin = timeToMinutes(nextConn.tobuDep);
+        // ★ 翌朝の始発を表示している場合は24時間分（1440分）を加えてマイナス化を防止！
+        if (isNextDayConn && trainMin < currentMin) {
+          trainMin += 1440;
+        }
+
+        let diffSec = (trainMin * 60) - (currentMin * 60 + currentSec);
+        if (diffSec < 0) diffSec = 0; // マイナス安全ガード
+
+        const minVal = Math.floor(diffSec / 60);
+        const secVal = diffSec % 60;
+        countdownEl.textContent = `${isEnglish ? "In " : "あと "}${String(minVal).padStart(2,'0')}:${String(secVal).padStart(2,'0')}`;
       } else {
         document.getElementById("origin-dep-time").textContent = "--:--";
         document.getElementById("transfer-time").textContent = "--:-- / --:--";
