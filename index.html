@@ -277,110 +277,111 @@
       100% { transform: translateX(-100%); }
     }
 
-    /* 3方面縦並び乗換案内セクション（東武動物公園版） */
-    .info-section-multi {
-      background: #050a14;
+    /* 下段 白岡接続案内カード（1段シンプルデザイン） */
+    .info-section {
+      background: #060b18;
       border: 2px solid #1c2d4a;
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 12px 18px;
+      height: 155px;
+    }
+
+    .info-header {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .transfer-header-label {
-      font-size: 0.95rem;
-      font-weight: 900;
-      color: #38bdf8;
-      letter-spacing: 1px;
-      border-bottom: 1px solid #1e293b;
-      padding-bottom: 4px;
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      height: 28px;
+      margin-bottom: 8px;
     }
 
-    .transfer-row {
-      display: grid;
-      grid-template-columns: 190px 1fr 28px 1.5fr 28px 1.2fr 110px;
-      align-items: center;
-      background: #0d1527;
-      border: 1px solid #1e2e4a;
-      border-radius: 6px;
-      padding: 6px 10px;
-      height: 52px;
-    }
+    .info-title-box { display: flex; align-items: center; gap: 12px; }
 
-    .dir-badge {
-      font-size: 0.82rem;
+    .route-badge {
+      background: linear-gradient(135deg, #ff9900, #ff6600);
+      color: #000;
+      font-size: 0.8rem;
       font-weight: 900;
-      padding: 4px 6px;
+      padding: 3px 10px;
       border-radius: 4px;
-      text-align: center;
-      white-space: nowrap;
+      font-family: 'Chakra Petch', sans-serif;
     }
 
-    .dir-ueno { background: linear-gradient(135deg, #0066ff, #0033aa); color: #fff; }
-    .dir-tokyo{ background: linear-gradient(135deg, #00b050, #007030); color: #fff; }
-    .dir-omiya{ background: linear-gradient(135deg, #ff8c00, #cc5500); color: #fff; }
+    .info-title-text { color: var(--text-orange); font-size: 1.15rem; font-weight: 900; }
 
-    .tf-step-box {
+    .info-countdown-box {
+      background: #000;
+      border: 1px solid #2a3a57;
+      padding: 2px 12px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 1.15rem;
+      color: var(--ok-green);
+      font-weight: bold;
+    }
+
+    .info-connection-flow {
+      display: grid;
+      grid-template-columns: 1fr 28px 1.5fr 28px 1fr;
+      align-items: center;
+      gap: 6px;
+      height: 95px;
+    }
+
+    .step-card {
+      background: #111625;
+      border: 1px solid #233555;
+      border-radius: 6px;
+      padding: 8px 6px;
+      height: 95px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
       text-align: center;
     }
 
-    .tf-station-title {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      font-weight: bold;
-      white-space: nowrap;
+    .step-card.highlight { background: #0f1c33; border-color: #38bdf8; }
+
+    .step-station-row { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
+    .step-station-name { font-size: 0.95rem; color: #e2e8f0; font-weight: 900; }
+
+    .platform-badge {
+      background: #ffcc00;
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 1px 5px;
+      border-radius: 3px;
     }
 
-    .tf-time-main {
+    .step-time-main {
       font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.45rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: var(--text-yellow);
       line-height: 1;
     }
 
-    .tf-time-transfer {
+    .step-time-transfer {
       font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--text-orange);
       line-height: 1;
       white-space: nowrap;
     }
 
-    .tf-time-dest {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: var(--ok-green);
+    .step-sub-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
     }
 
-    .tf-arrow {
-      color: #38bdf8;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .tf-countdown {
-      background: #000;
-      border: 1px solid #2a3a57;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 1.05rem;
-      color: var(--ok-green);
-      font-weight: bold;
-      text-align: center;
-      padding: 4px 0;
-    }
+    .arrow { color: var(--text-orange); font-size: 1.2rem; font-weight: bold; text-align: center; }
   </style>
 </head>
 <body>
@@ -441,72 +442,52 @@
         <div class="cars-info" id="m3-cars">--<span class="cars-unit" id="m3-unit">両</span></div>
       </div>
 
-      <!-- 3. ★ 3方面縦並び 久喜乗り換えJR接続エリア ★ -->
-      <div class="info-section-multi">
-        <div class="transfer-header-label" id="lbl-transfer-title">
-          <span>🔄 久喜駅乗り換え JR宇都宮線 各方面接続案内</span>
+      <!-- 3. 白岡接続案内カード（1段構成） -->
+      <div class="info-section">
+        <div class="info-header">
+          <div class="info-title-box">
+            <span class="route-badge">TRANSFER</span>
+            <span class="info-title-text" id="info-card-title">久喜乗り換え ➔ JR宇都宮線 白岡行き接続</span>
+          </div>
+          <div class="info-countdown-box" id="info-countdown">
+            あと --:--
+          </div>
         </div>
 
-        <!-- 段1: 上野・大宮方面 -->
-        <div class="transfer-row">
-          <div class="dir-badge dir-ueno" id="dir-label-1">JR上野・大宮方面</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-tobu-1">東武動物公園発</span>
-            <span class="tf-time-main" id="r1-tobu-dep">--:--</span>
+        <div class="info-connection-flow">
+          <!-- 東武動物公園発 -->
+          <div class="step-card">
+            <div class="step-station-row">
+              <span class="step-station-name" id="st-origin">東武動物公園</span>
+              <span class="platform-badge">4番線</span>
+            </div>
+            <div class="step-time-main" id="origin-dep-time">--:--</div>
+            <div class="step-sub-label" id="lbl-origin-line">東武伊勢崎線</div>
           </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-trans-1">久喜 乗り換え</span>
-            <span class="tf-time-transfer" id="r1-trans-time">--:-- / --:--</span>
-          </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-arr-1">上野・大宮 到着</span>
-            <span class="tf-time-dest" id="r1-arr-time">--:--</span>
-          </div>
-          <div class="tf-countdown" id="r1-countdown">あと --:--</div>
-        </div>
 
-        <!-- 段2: 東京・横浜・熱海方面（上野東京ライン） -->
-        <div class="transfer-row">
-          <div class="dir-badge dir-tokyo" id="dir-label-2">JR東京・横浜方面</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-tobu-2">東武動物公園発</span>
-            <span class="tf-time-main" id="r2-tobu-dep">--:--</span>
-          </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-trans-2">久喜 乗り換え</span>
-            <span class="tf-time-transfer" id="r2-trans-time">--:-- / --:--</span>
-          </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-arr-2">横浜・熱海 到着</span>
-            <span class="tf-time-dest" id="r2-arr-time">--:--</span>
-          </div>
-          <div class="tf-countdown" id="r2-countdown">あと --:--</div>
-        </div>
+          <div class="arrow">➔</div>
 
-        <!-- 段3: 宇都宮・黒磯方面（下り） -->
-        <div class="transfer-row">
-          <div class="dir-badge dir-omiya" id="dir-label-3">JR宇都宮方面</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-tobu-3">東武動物公園発</span>
-            <span class="tf-time-main" id="r3-tobu-dep">--:--</span>
+          <!-- 久喜駅乗り換え -->
+          <div class="step-card highlight">
+            <div class="step-station-row">
+              <span class="step-station-name" id="st-transfer">久喜駅 乗り換え</span>
+              <span class="platform-badge">1・2番線</span>
+            </div>
+            <div class="step-time-transfer" id="transfer-time">--:-- / --:--</div>
+            <div class="step-sub-label" id="lbl-transfer-info" style="color: #ffcc00;">JR宇都宮線</div>
           </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-trans-3">久喜 乗り換え</span>
-            <span class="tf-time-transfer" id="r3-trans-time">--:-- / --:--</span>
-          </div>
-          <div class="tf-arrow">➔</div>
-          <div class="tf-step-box">
-            <span class="tf-station-title" id="st-arr-3">宇都宮 到着</span>
-            <span class="tf-time-dest" id="r3-arr-time">--:--</span>
-          </div>
-          <div class="tf-countdown" id="r3-countdown">あと --:--</div>
-        </div>
 
+          <div class="arrow">➔</div>
+
+          <!-- 白岡駅到着 -->
+          <div class="step-card">
+            <div class="step-station-row">
+              <span class="step-station-name" id="st-dest">白岡駅 到着</span>
+            </div>
+            <div class="step-time-main" id="dest-arr-time" style="color: var(--ok-green);">--:--</div>
+            <div class="step-sub-label" id="lbl-dest-arr">到着予定</div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -694,26 +675,17 @@
         ? "for Kasukabe, Kita-senju, Asakusa"
         : "春日部・北千住・浅草 方面";
 
-      // 下段接続セクションの日英切替
-      document.getElementById("lbl-transfer-title").textContent = isEnglish
-        ? "🔄 Transfer Connections at Kuki Sta. for JR Utsunomiya Line"
-        : "🔄 久喜駅乗り換え JR宇都宮線 各方面接続案内";
+      // 下段白岡接続カードの日英切替
+      document.getElementById("info-card-title").textContent = isEnglish
+        ? "Transfer at Kuki ➔ JR Utsunomiya Line for Shiraoka"
+        : "久喜乗り換え ➔ JR宇都宮線 白岡行き接続";
 
-      document.getElementById("dir-label-1").textContent = isEnglish ? "JR Ueno / Omiya" : "JR上野・大宮方面";
-      document.getElementById("dir-label-2").textContent = isEnglish ? "JR Tokyo / Yokohama" : "JR東京・横浜方面";
-      document.getElementById("dir-label-3").textContent = isEnglish ? "JR Utsunomiya" : "JR宇都宮方面";
+      document.getElementById("st-origin").textContent = isEnglish ? "Tobu-doubutsukoen" : "東武動物公園";
+      document.getElementById("lbl-origin-line").textContent = isEnglish ? "Tobu Isesaki Line" : "東武伊勢崎線";
 
-      document.getElementById("st-tobu-1").textContent = isEnglish ? "Dep. Tobu-doubutsukoen" : "東武動物公園発";
-      document.getElementById("st-tobu-2").textContent = isEnglish ? "Dep. Tobu-doubutsukoen" : "東武動物公園発";
-      document.getElementById("st-tobu-3").textContent = isEnglish ? "Dep. Tobu-doubutsukoen" : "東武動物公園発";
-
-      document.getElementById("st-trans-1").textContent = isEnglish ? "Trans. Kuki" : "久喜 乗り換え";
-      document.getElementById("st-trans-2").textContent = isEnglish ? "Trans. Kuki" : "久喜 乗り換え";
-      document.getElementById("st-trans-3").textContent = isEnglish ? "Trans. Kuki" : "久喜 乗り換え";
-
-      document.getElementById("st-arr-1").textContent = isEnglish ? "Arr. Ueno / Omiya" : "上野・大宮 到着";
-      document.getElementById("st-arr-2").textContent = isEnglish ? "Arr. Yokohama / Atami" : "横浜・熱海 到着";
-      document.getElementById("st-arr-3").textContent = isEnglish ? "Arr. Utsunomiya" : "宇都宮 到着";
+      document.getElementById("st-transfer").textContent = isEnglish ? "Kuki Sta." : "久喜駅 乗り換え";
+      document.getElementById("st-dest").textContent = isEnglish ? "Shiraoka Sta." : "白岡駅 到着";
+      document.getElementById("lbl-dest-arr").textContent = isEnglish ? "Est. Arrival" : "到着予定";
     }
 
     function getTodayDatasets() {
@@ -785,8 +757,8 @@
         setRowDataFinished("m3", isEnglish);
       } else {
         setRowData("m1", upcomingUp[0], isEnglish);
-        setRowData("m2", upcomingUp[1], isEnglish, isNextDayTrain, currentMin);
-        setRowData("m3", upcomingUp[2], isEnglish, isNextDayTrain, currentMin);
+        setRowData("m2", upcomingUp[1], isEnglish);
+        setRowData("m3", upcomingUp[2], isEnglish);
 
         const nextTrain = upcomingUp[0];
         let trainMin = timeToMinutes(nextTrain.time);
@@ -799,13 +771,8 @@
         }
       }
 
-      // 下段 3方面接続の更新
-      updateConnectionRow("r1", connections, currentMin, currentSec, isEnglish, "Ueno");
-      updateConnectionRow("r2", connections, currentMin, currentSec, isEnglish, "Tokyo");
-      updateConnectionRow("r3", connections, currentMin, currentSec, isEnglish, "Utsunomiya");
-    }
-
-    function updateConnectionRow(prefix, connections, currentMin, currentSec, isEn, category) {
+      // 下段 白岡接続の更新
+      const countdownEl = document.getElementById("info-countdown");
       const lastConnMin = Math.max(...connections.map(r => timeToMinutes(r.tobuDep)));
       const connSwitchMin = lastConnMin + 10;
 
@@ -823,9 +790,17 @@
       }
 
       if (nextConn) {
-        document.getElementById(`${prefix}-tobu-dep`).textContent = nextConn.tobuDep;
-        document.getElementById(`${prefix}-trans-time`).textContent = `${nextConn.kukiArr} / ${nextConn.jrDep}`;
-        document.getElementById(`${prefix}-arr-time`).textContent = nextConn.shiraokaArr; // 代替として接続先到着時刻
+        document.getElementById("origin-dep-time").textContent = nextConn.tobuDep;
+        document.getElementById("transfer-time").textContent = `${nextConn.kukiArr} / ${nextConn.jrDep}`;
+        
+        let labelText = isEnglish ? "JR Utsunomiya Line" : "JR宇都宮線";
+        if (nextConn.jrType && nextConn.jrDest) {
+          labelText = `${nextConn.jrType} (${nextConn.jrDest}${isEnglish ? ' bound' : '行'})`;
+        } else if (nextConn.shiraokaArr === "当日接続なし") {
+          labelText = isEnglish ? "No connection today" : "当日接続なし";
+        }
+        document.getElementById("lbl-transfer-info").textContent = labelText;
+        document.getElementById("dest-arr-time").textContent = nextConn.shiraokaArr;
 
         let trainMin = timeToMinutes(nextConn.tobuDep);
         if (isNextDayConn && trainMin < currentMin) trainMin += 1440;
@@ -835,12 +810,13 @@
 
         const minVal = Math.floor(diffSec / 60);
         const secVal = diffSec % 60;
-        document.getElementById(`${prefix}-countdown`).textContent = `${isEn ? "In " : "あと "}${String(minVal).padStart(2,'0')}:${String(secVal).padStart(2,'0')}`;
+        countdownEl.textContent = `${isEnglish ? "In " : "あと "}${String(minVal).padStart(2,'0')}:${String(secVal).padStart(2,'0')}`;
       } else {
-        document.getElementById(`${prefix}-tobu-dep`).textContent = "--:--";
-        document.getElementById(`${prefix}-trans-time`).textContent = "--:-- / --:--";
-        document.getElementById(`${prefix}-arr-time`).textContent = "--:--";
-        document.getElementById(`${prefix}-countdown`).textContent = isEn ? "Ended" : "接続終了";
+        document.getElementById("origin-dep-time").textContent = "--:--";
+        document.getElementById("transfer-time").textContent = "--:-- / --:--";
+        document.getElementById("lbl-transfer-info").textContent = "---";
+        document.getElementById("dest-arr-time").textContent = "--:--";
+        countdownEl.textContent = isEnglish ? "Finished" : "本日の接続終了";
       }
     }
 
@@ -878,7 +854,7 @@
 
     const weekdayConnections = [{"tobuDep": "05:12", "kukiArr": "05:19", "jrDep": "05:33", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "05:38"}, {"tobuDep": "05:43", "kukiArr": "05:50", "jrDep": "06:00", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:06"}, {"tobuDep": "06:05", "kukiArr": "06:12", "jrDep": "06:19", "jrType": "普通", "jrDest": "大船", "shiraokaArr": "06:25"}, {"tobuDep": "06:20", "kukiArr": "06:27", "jrDep": "06:38", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:44"}, {"tobuDep": "06:33", "kukiArr": "06:39", "jrDep": "06:44", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "06:50"}, {"tobuDep": "06:37", "kukiArr": "06:44", "jrDep": "06:49", "jrType": "普通", "jrDest": "大船", "shiraokaArr": "06:55"}, {"tobuDep": "06:57", "kukiArr": "07:04", "jrDep": "07:10", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "07:16"}, {"tobuDep": "07:13", "kukiArr": "07:20", "jrDep": "07:28", "jrType": "普通", "jrDest": "国府津", "shiraokaArr": "07:34"}, {"tobuDep": "07:29", "kukiArr": "07:35", "jrDep": "07:39", "jrType": "普通", "jrDest": "品川", "shiraokaArr": "07:46"}, {"tobuDep": "07:34", "kukiArr": "07:41", "jrDep": "07:45", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "07:52"}, {"tobuDep": "07:48", "kukiArr": "07:55", "jrDep": "08:01", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:08"}, {"tobuDep": "08:02", "kukiArr": "08:09", "jrDep": "08:14", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "08:21"}, {"tobuDep": "08:14", "kukiArr": "08:21", "jrDep": "08:25", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "08:31"}, {"tobuDep": "08:26", "kukiArr": "08:33", "jrDep": "08:38", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:44"}, {"tobuDep": "08:38", "kukiArr": "08:45", "jrDep": "08:52", "jrType": "普通", "jrDest": "伊東", "shiraokaArr": "08:57"}, {"tobuDep": "08:48", "kukiArr": "08:55", "jrDep": "09:07", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "09:12"}, {"tobuDep": "09:05", "kukiArr": "09:11", "jrDep": "09:23", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "09:28"}, {"tobuDep": "16:04", "kukiArr": "16:11", "jrDep": "16:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "16:26"}, {"tobuDep": "17:08", "kukiArr": "17:15", "jrDep": "17:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "17:26"}, {"tobuDep": "18:03", "kukiArr": "18:10", "jrDep": "18:17", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "18:22"}, {"tobuDep": "19:04", "kukiArr": "19:11", "jrDep": "19:19", "jrType": "普通", "jrDest": "国府津", "shiraokaArr": "19:24"}, {"tobuDep": "20:03", "kukiArr": "20:10", "jrDep": "20:17", "jrType": "普通", "jrDest": "沼津", "shiraokaArr": "20:22"}, {"tobuDep": "21:04", "kukiArr": "21:11", "jrDep": "21:18", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "21:23"}, {"tobuDep": "22:04", "kukiArr": "22:11", "jrDep": "22:21", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "22:26"}, {"tobuDep": "23:00", "kukiArr": "23:06", "jrDep": "23:15", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "23:21"}, {"tobuDep": "23:17", "kukiArr": "23:24", "jrDep": "23:37", "jrType": "普通", "jrDest": "大宮", "shiraokaArr": "23:42"}, {"tobuDep": "23:37", "kukiArr": "23:44", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}, {"tobuDep": "23:55", "kukiArr": "00:02", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}, {"tobuDep": "24:11", "kukiArr": "00:17", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}];
 
-    const holidayConnections = [{"tobuDep": "05:12", "kukiArr": "05:19", "jrDep": "05:33", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "05:38"}, {"tobuDep": "05:43", "kukiArr": "05:50", "jrDep": "06:00", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:05"}, {"tobuDep": "06:05", "kukiArr": "06:12", "jrDep": "06:19", "jrType": "普通", "jrDest": "大船", "shiraokaArr": "06:25"}, {"tobuDep": "06:20", "kukiArr": "06:27", "jrDep": "06:38", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:44"}, {"tobuDep": "06:33", "kukiArr": "06:39", "jrDep": "06:44", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "06:50"}, {"tobuDep": "06:37", "kukiArr": "06:44", "jrDep": "06:49", "jrType": "普通", "jrDest": "大船", "shiraokaArr": "06:55"}, {"tobuDep": "06:57", "kukiArr": "07:04", "jrDep": "07:10", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "07:16"}, {"tobuDep": "07:13", "kukiArr": "07:20", "jrDep": "07:28", "jrType": "普通", "jrDest": "国府津", "shiraokaArr": "07:34"}, {"tobuDep": "07:29", "kukiArr": "07:35", "jrDep": "07:39", "jrType": "普通", "jrDest": "品川", "shiraokaArr": "07:45"}, {"tobuDep": "07:34", "kukiArr": "07:41", "jrDep": "07:45", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "07:51"}, {"tobuDep": "07:48", "kukiArr": "07:55", "jrDep": "08:01", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:07"}, {"tobuDep": "08:02", "kukiArr": "08:09", "jrDep": "08:14", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "08:20"}, {"tobuDep": "08:14", "kukiArr": "08:21", "jrDep": "08:25", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "08:31"}, {"tobuDep": "08:26", "kukiArr": "08:33", "jrDep": "08:38", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:44"}, {"tobuDep": "08:38", "kukiArr": "08:45", "jrDep": "08:52", "jrType": "普通", "jrDest": "伊東", "shiraokaArr": "08:57"}, {"tobuDep": "08:48", "kukiArr": "08:55", "jrDep": "09:07", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "09:12"}, {"tobuDep": "09:05", "kukiArr": "09:11", "jrDep": "09:23", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "09:28"}, {"tobuDep": "16:04", "kukiArr": "16:11", "jrDep": "16:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "16:26"}, {"tobuDep": "17:08", "kukiArr": "17:15", "jrDep": "17:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "17:26"}, {"tobuDep": "18:03", "kukiArr": "18:10", "jrDep": "18:17", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "18:22"}, {"tobuDep": "19:04", "kukiArr": "19:11", "jrDep": "19:19", "jrType": "普通", "jrDest": "国府津", "shiraokaArr": "19:24"}, {"tobuDep": "20:03", "kukiArr": "20:10", "jrDep": "20:17", "jrType": "普通", "jrDest": "沼津", "shiraokaArr": "20:22"}, {"tobuDep": "21:04", "kukiArr": "21:11", "jrDep": "21:18", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "21:23"}, {"tobuDep": "22:04", "kukiArr": "22:11", "jrDep": "22:21", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "22:26"}, {"tobuDep": "23:00", "kukiArr": "23:06", "jrDep": "23:15", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "23:20"}, {"tobuDep": "23:17", "kukiArr": "23:24", "jrDep": "23:37", "jrType": "普通", "jrDest": "大宮", "shiraokaArr": "23:42"}, {"tobuDep": "23:37", "kukiArr": "23:44", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}, {"tobuDep": "23:55", "kukiArr": "00:02", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}];
+    const holidayConnections = [{"tobuDep": "05:12", "kukiArr": "05:19", "jrDep": "05:33", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "05:38"}, {"tobuDep": "05:43", "kukiArr": "05:50", "jrDep": "06:00", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:05"}, {"tobuDep": "06:05", "kukiArr": "06:12", "jrDep": "06:19", "jrType": "普通", "jrDest": "大船", "shiraokaArr": "06:25"}, {"tobuDep": "06:20", "kukiArr": "06:27", "jrDep": "06:38", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "06:44"}, {"tobuDep": "06:37", "kukiArr": "06:44", "jrDep": "06:47", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "06:53"}, {"tobuDep": "06:57", "kukiArr": "07:04", "jrDep": "07:08", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "07:14"}, {"tobuDep": "07:13", "kukiArr": "07:20", "jrDep": "07:32", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "07:38"}, {"tobuDep": "07:29", "kukiArr": "07:35", "jrDep": "07:47", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "07:51"}, {"tobuDep": "07:34", "kukiArr": "07:41", "jrDep": "07:47", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "07:51"}, {"tobuDep": "07:48", "kukiArr": "07:55", "jrDep": "08:01", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:07"}, {"tobuDep": "08:02", "kukiArr": "08:09", "jrDep": "08:14", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "08:20"}, {"tobuDep": "08:14", "kukiArr": "08:21", "jrDep": "08:25", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "08:31"}, {"tobuDep": "08:26", "kukiArr": "08:33", "jrDep": "08:38", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "08:44"}, {"tobuDep": "08:38", "kukiArr": "08:45", "jrDep": "08:52", "jrType": "普通", "jrDest": "伊東", "shiraokaArr": "08:57"}, {"tobuDep": "08:48", "kukiArr": "08:55", "jrDep": "09:07", "jrType": "普通", "jrDest": "逗子", "shiraokaArr": "09:12"}, {"tobuDep": "09:05", "kukiArr": "09:11", "jrDep": "09:23", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "09:28"}, {"tobuDep": "16:04", "kukiArr": "16:11", "jrDep": "16:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "16:26"}, {"tobuDep": "17:08", "kukiArr": "17:15", "jrDep": "17:21", "jrType": "普通", "jrDest": "熱海", "shiraokaArr": "17:26"}, {"tobuDep": "18:03", "kukiArr": "18:10", "jrDep": "18:17", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "18:22"}, {"tobuDep": "19:04", "kukiArr": "19:11", "jrDep": "19:19", "jrType": "普通", "jrDest": "国府津", "shiraokaArr": "19:24"}, {"tobuDep": "20:03", "kukiArr": "20:10", "jrDep": "20:17", "jrType": "普通", "jrDest": "沼津", "shiraokaArr": "20:22"}, {"tobuDep": "21:04", "kukiArr": "21:11", "jrDep": "21:18", "jrType": "普通", "jrDest": "小田原", "shiraokaArr": "21:23"}, {"tobuDep": "22:04", "kukiArr": "22:11", "jrDep": "22:21", "jrType": "普通", "jrDest": "平塚", "shiraokaArr": "22:26"}, {"tobuDep": "23:00", "kukiArr": "23:06", "jrDep": "23:15", "jrType": "普通", "jrDest": "上野", "shiraokaArr": "23:20"}, {"tobuDep": "23:17", "kukiArr": "23:24", "jrDep": "23:37", "jrType": "普通", "jrDest": "大宮", "shiraokaArr": "23:42"}, {"tobuDep": "23:37", "kukiArr": "23:44", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}, {"tobuDep": "23:55", "kukiArr": "00:02", "jrDep": "---", "jrType": "", "jrDest": "", "shiraokaArr": "当日接続なし"}];
 
     // 初期化ロード
     checkRealtimeInfo();
