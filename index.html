@@ -561,18 +561,18 @@
 
       <!-- 2. 発車標テーブルヘッダー -->
       <div class="board-header">
-        <div id="hdr-dept">Departure time</div>
-        <div id="hdr-train">Train</div>
-        <div style="text-align: left; padding-left: 30px;" id="hdr-to">To</div>
-        <div id="hdr-cars">Cars</div>
+        <div id="hdr-dept">発車時刻</div>
+        <div id="hdr-train">種別</div>
+        <div style="text-align: left; padding-left: 30px;" id="hdr-to">行先</div>
+        <div id="hdr-cars">両数</div>
       </div>
 
       <!-- 先発 -->
       <div class="board-row">
         <div class="dept-time" id="m1-time">--:--</div>
-        <div class="badge-container"><span class="train-badge badge-local" id="m1-badge">Local</span></div>
+        <div class="badge-container"><span class="train-badge badge-local" id="m1-badge">普通</span></div>
         <div class="destination" id="m1-dest">--</div>
-        <div class="cars-info" id="m1-cars">--<span class="cars-unit" id="m1-unit">Cars</span></div>
+        <div class="cars-info" id="m1-cars">--<span class="cars-unit" id="m1-unit">両</span></div>
       </div>
 
       <!-- 次列車の停車駅案内 -->
@@ -603,17 +603,17 @@
       <!-- 次発 -->
       <div class="board-row">
         <div class="dept-time" id="m2-time">--:--</div>
-        <div class="badge-container"><span class="train-badge badge-local" id="m2-badge">Local</span></div>
+        <div class="badge-container"><span class="train-badge badge-local" id="m2-badge">普通</span></div>
         <div class="destination" id="m2-dest">--</div>
-        <div class="cars-info" id="m2-cars">--<span class="cars-unit" id="m2-unit">Cars</span></div>
+        <div class="cars-info" id="m2-cars">--<span class="cars-unit" id="m2-unit">両</span></div>
       </div>
 
       <!-- 次々発 -->
       <div class="board-row" style="border: none;">
         <div class="dept-time" id="m3-time">--:--</div>
-        <div class="badge-container"><span class="train-badge badge-local" id="m3-badge">Local</span></div>
+        <div class="badge-container"><span class="train-badge badge-local" id="m3-badge">普通</span></div>
         <div class="destination" id="m3-dest">--</div>
-        <div class="cars-info" id="m3-cars">--<span class="cars-unit" id="m3-unit">Cars</span></div>
+        <div class="cars-info" id="m3-cars">--<span class="cars-unit" id="m3-unit">両</span></div>
       </div>
 
       <!-- 運行状況テロップ -->
@@ -784,9 +784,9 @@
         ? "for Kuki, Tatebayashi, Isesaki"
         : "久喜・館林・伊勢崎 方面";
 
-      document.getElementById("info-card-title").textContent =
-        isEnglish ? "Stops for the next train" : "次の列車の停車駅";
-      document.getElementById("route-badge-label").textContent = isEnglish ? "STOPS" : "停車駅";
+      // 停車駅案内は、全体が英語表示中でも日本語のまま固定する
+      document.getElementById("info-card-title").textContent = "次の列車の停車駅";
+      document.getElementById("route-badge-label").textContent = "停車駅";
 
       const btn = document.getElementById("audio-toggle-btn");
       if (audioEnabled) {
@@ -1019,33 +1019,30 @@
       const destination = document.getElementById("stop-destination");
       const list = document.getElementById("stop-list");
       if (!train) {
-        countdown.textContent = isEnglish ? "Finished" : "本日終了";
+        countdown.textContent = "本日終了";
         service.textContent = "--";
         destination.textContent = "--";
-        list.textContent = isEnglish ? "Today's service has ended." : "本日の運転は終了しました";
+        list.textContent = "本日の運転は終了しました";
         list.classList.remove("compact");
-        list.classList.toggle("english", isEnglish);
+        list.classList.remove("english");
         return;
       }
       const min = Math.floor(seconds / 60);
       const sec = seconds % 60;
-      countdown.textContent = `${isEnglish ? "In " : "あと "}${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-      service.textContent = isEnglish
-        ? (train.serviceNameEn || train.typeEn)
-        : (train.serviceNameJa || train.typeJa);
-      destination.textContent = isEnglish ? `for ${train.destEn}` : `${train.destJa}行`;
+      countdown.textContent = `あと ${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+      service.textContent = train.serviceNameJa || train.typeJa;
+      destination.textContent = `${train.destJa}行`;
       const stations = stationsFor(train);
       list.innerHTML = stations.map((name, index) => {
-        const shownName = isEnglish ? (stationNamesEn[name] || name) : name;
         const pointClass = index === 0
           ? "stop-point origin"
           : index === stations.length - 1
             ? "stop-point destination"
             : "stop-point";
-        return `<span class="${pointClass}"><span class="stop-node"></span><span class="stop-label">${shownName}</span></span>`;
+        return `<span class="${pointClass}"><span class="stop-node"></span><span class="stop-label">${name}</span></span>`;
       }).join("");
-      list.classList.toggle("compact", stations.length > 7 || (isEnglish && stations.length > 5));
-      list.classList.toggle("english", isEnglish);
+      list.classList.toggle("compact", stations.length > 7);
+      list.classList.remove("english");
     }
 
     function setRowData(prefix, data, isEn) {
