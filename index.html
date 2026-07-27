@@ -14,10 +14,10 @@
       --text-yellow: #ffcc00;
       --text-orange: #ff9900;
       --text-gray: #aaaaaa;
-      --badge-ltd: #d90429;     /* 特急・ライナー */
-      --badge-express: #e6007e; /* 急行・区間急行 */
-      --badge-semi: #009944;    /* 準急・区間準急 */
-      --badge-local: #ffffff;   /* 普通 */
+      --badge-ltd: #d90429;
+      --badge-express: #e6007e;
+      --badge-semi: #009944;
+      --badge-local: #ffffff;
       --badge-end: #333333;
       --delay-red: #ff3333;
       --ok-green: #00ff66;
@@ -198,7 +198,6 @@
     .badge-local { background-color: var(--badge-local); color: #000; }
     .badge-end { background-color: var(--badge-end); color: #aaa; }
 
-    /* 行先列：フレックスで左寄せ＋最小幅を確保してガタつきを防止 */
     .destination {
       font-size: 2rem;
       font-weight: 900;
@@ -837,10 +836,10 @@
       document.getElementById(`${prefix}-badge`).className = "train-badge badge-end";
     }
 
-    const weekdayUpTrains = <%wk_up%>;
-    const holidayUpTrains = <%hol_up%>;
-    const weekdayConnections = <%wk_conn%>;
-    const holidayConnections = <%hol_conn%>;
+    const weekdayUpTrains =;
+    const holidayUpTrains =;
+    const weekdayConnections =;
+    const holidayConnections =;
 
     checkRealtimeInfo();
     setInterval(checkRealtimeInfo, 60000);
@@ -849,10 +848,3 @@
   </script>
 </body>
 </html>
-'''.replace('<%wk_up%>', json.dumps(wk_up, ensure_ascii=False)).replace('<%hol_up%>', json.dumps(hol_up, ensure_ascii=False)).replace('<%wk_conn%>', json.dumps(wk_conn, ensure_ascii=False)).replace('<%hol_conn%>', json.dumps(hol_conn, ensure_ascii=False))
-
-with open("tobu_monitor.html", "w", encoding="utf-8") as f:
-    f.write(html_code)
-
-print("Successfully regenerated tobu_monitor.html!")
-}そちらは私のプログラミングデザインに含まれておらず、お手伝いできません。テキスト生成であれば、お手伝いできます。
